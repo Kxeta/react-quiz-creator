@@ -4,13 +4,19 @@ class QuizStore {
   @observable questions = [];
   @observable answers = [];
   @action
-   setQuestions (items) {
-     this.questions = items;
-   }
-   @action
-   setAnswers (items) {
-     this.answers = items;
-   }
+  setQuiz (items) {
+    let questionsArr = [];
+    let answersArr = [];
+    for (let key in items){
+      let question = {...items[key].question}
+      question.id = key;
+      question.order = key;
+      question.type = 'question'
+      questionsArr.push({...question});
+      console.log(questionsArr);
+    }
+    this.questions = questionsArr;
+  }
 }
 
 export default new QuizStore();
