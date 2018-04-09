@@ -7,7 +7,6 @@ I intend that with this project you can:
  - Load/Save a JSON file of your quiz
 
 ## Stack
-I'm using:
  - React
  - Babel
  - Webpack
