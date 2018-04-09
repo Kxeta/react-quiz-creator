@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { Provider } from 'mobx-react';
 import './styles/main.scss';
+import { EditorComponent } from './components';
+import { QuizStore } from './modules';
 
 
 
@@ -14,8 +17,9 @@ export default class App extends Component {
   }
 
   componentWillMount(){
-    console.log(this.getContentJSON());
-    this.setState({items: this.getContentJSON()})
+    let items = this.getContentJSON();
+    this.setState({items});
+    QuizStore.setQuestions(items);
   }
   updateStateJSON = () => {
 
@@ -40,6 +44,10 @@ export default class App extends Component {
     ];
   }
   render () {
-    return <div/>;
+    return (
+      <Provider QuizStore = { QuizStore }>
+        <EditorComponent />
+      </Provider>
+    );
   }
 }

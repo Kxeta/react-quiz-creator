@@ -1,8 +1,24 @@
 import ReactQuill from 'react-quill';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { inject, observer } from 'mobx-react';
+import { QuizStore } from '../../modules';
 import './EditorComponent.scss';
 
+
+@inject('QuizStore')
+@observer
 class EditorComponent extends Component {
+  static propTypes = { 
+    content: PropTypes.string, 
+    formats: PropTypes.array, 
+    modules: PropTypes.array, 
+    id: PropTypes.string,
+    className: PropTypes.string,
+    placeholder: PropTypes.string,
+    readOnly: PropTypes.bool,
+    QuizStore: PropTypes.object
+  };
 
   constructor(props){
     super(props);
