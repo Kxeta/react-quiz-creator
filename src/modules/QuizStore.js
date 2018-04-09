@@ -13,7 +13,6 @@ class QuizStore {
       question.order = key;
       question.type = 'question'
       questionsArr.push({...question});
-      console.log(questionsArr);
     }
     this.questions = questionsArr;
   }

@@ -1,9 +1,8 @@
 import { EditorComponent } from './editor';
-import { SortableItem, SortableList, SortableComponent } from './sortable';
+import { DroppableComponent, DraggableComponent } from './sortable';
 
 export {
   EditorComponent,
-  SortableItem,
-  SortableList,
-  SortableComponent
+  DroppableComponent,
+  DraggableComponent
 }

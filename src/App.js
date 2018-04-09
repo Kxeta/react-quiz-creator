@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Provider } from 'mobx-react';
 import './styles/main.scss';
-import { SortableList, SortableComponent } from './components';
+import { SortableList, DroppableComponent } from './components';
 import { QuizStore } from './modules';
 
 
@@ -40,7 +40,7 @@ export default class App extends Component {
   render () {
     return (
       <Provider QuizStore = { QuizStore }>
-        <SortableComponent items={QuizStore.questions} />
+        <DroppableComponent items={QuizStore.questions} />
       </Provider>
     );
   }

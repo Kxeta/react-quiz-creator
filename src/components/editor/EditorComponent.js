@@ -28,7 +28,6 @@ class EditorComponent extends Component {
   }
 
   handleOnChange = (content, delta, source, editor) => {
-    console.log(content);
     this.setState({ content })
   }
 
