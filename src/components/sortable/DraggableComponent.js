@@ -10,8 +10,16 @@ export default class DraggableComponent extends Component{
     index: PropTypes.number,
   };
 
+  renderAnswers(items) {
+    return (
+      <DroppableComponent items={items} />
+    )
+
+  }
+
   render() {
     const { item, index } = this.props;
+
     return (
       <Draggable key={item.id} draggableId={item.id} index={index}>
         {(provided, snapshot) => (
@@ -19,9 +27,14 @@ export default class DraggableComponent extends Component{
             <div
               ref={provided.innerRef}
               {...provided.draggableProps}
-              {...provided.dragHandleProps}
-              className='quiz-container'>
+              className={'quiz-container ' + this.props.type && this.props.type == 'answer' ? 'answer-container' : ''}>
+              <span {...provided.dragHandleProps} style={{ display: 'inline-block', margin: '0 10px', border: '1px solid #000'}}>Drag</span>
               <EditorComponent content={item.content}></EditorComponent>
+              { sizeof(item.answers) ? 
+                this.renderAnswers(item.answers)
+                :
+                ''
+              }
             </div>
             {provided.placeholder}
           </div>

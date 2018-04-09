@@ -22,7 +22,17 @@ export default class App extends Component {
         "question" : {
           "content" : "<p>Teste questão 1</p>",
           "order" : 1,
-          "answers" : []
+          "answers" : [
+            {
+              "content": "<strong> WUlll!</strong>"
+            },
+            {
+              "content": "<strong> Wazaaa!</strong>"
+            },
+            {
+              "content": "<em> Aguwia!</em>"
+            }
+          ]
         }
       },
       {
