@@ -12,5 +12,5 @@ I'm using:
  - Babel
  - Webpack
  - Quill as RichText editor (React-quill)
- - Deciding if which plugin to use for draggable sort
+ - Deciding which plugin to use for draggable sort
  - Starting to use Mobx for state management
