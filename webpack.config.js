@@ -9,38 +9,36 @@ require('es6-promise').polyfill();
 
 // ------------------ Tasks ------------------
 const jsLoader = {
-  test: /\.js$/,
+  test: /\.jsx?$/,
   exclude: /node_modules/,
-  use: [
-    'babel-loader'
-  ]
+  use: ['babel-loader']
 }
 
 const scssLoader = {
   test: /\.s(a|c)ss$/,
-  use: ExtractCssChunks.extract({
-    fallback: 'style-loader',
-    use: [
-      {
-        loader: 'css-loader',
-        options: {
-          importLoaders: 10,
-          sourceMap: true,
-          minimize: false
-        }
-      },
-      {
-        loader: 'postcss-loader'
-      },
-      { loader: 'sass-loader' },
-      {
-        loader: 'sass-resources-loader',
-        options: {
-          resources: ['./src/styles/variables/variables.scss', './src/styles/mixins/mixins.scss']
-        }
+  use: [
+    {
+      loader: 'style-loader'
+    },
+    {
+      loader: 'css-loader',
+      options: {
+        importLoaders: 10,
+        sourceMap: true,
+        minimize: false
       }
-    ]
-  })
+    },
+    {
+      loader: 'postcss-loader'
+    },
+    { loader: 'sass-loader' },
+    {
+      loader: 'sass-resources-loader',
+      options: {
+        resources: ['./src/styles/variables/variables.scss', './src/styles/mixins/mixins.scss']
+      }
+    }
+  ]
 };
 
 const cssLoader = {
@@ -100,8 +98,8 @@ module.exports = {
     ]
   },
   plugins: [
-    extractTextPlugin,
-    bundleAnalyzerPlugin
+    // bundleAnalyzerPlugin,
+    extractTextPlugin
   ],
   stats: {
     colors: true

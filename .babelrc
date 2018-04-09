@@ -1,0 +1,24 @@
+{
+  "presets": [
+    "babel-polyfill",
+    "react",
+    "stage-3",
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": [
+            "last 3 versions",
+            "ie >= 9",
+            "safari >= 8"
+          ]
+        },
+        "useBuiltIns": true,
+        "modules": false
+      }
+    ]
+  ],
+  "plugins": [
+    "transform-class-properties"
+  ]
+}
