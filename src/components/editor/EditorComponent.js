@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import './EditorComponent.scss';
 
 
-@inject('QuizStore')
-@observer
 class EditorComponent extends Component {
   static propTypes = { 
     content: PropTypes.string, 
@@ -15,7 +13,6 @@ class EditorComponent extends Component {
     className: PropTypes.string,
     placeholder: PropTypes.string,
     readOnly: PropTypes.bool,
-    QuizStore: PropTypes.object
   };
 
   constructor(props){

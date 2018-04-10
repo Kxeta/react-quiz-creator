@@ -38,37 +38,39 @@ export default class DragDropComponent extends Component{
     }
 
 
-    let items = this.state.items;
+
 
 
     if(result.type.indexOf('question') >= 0){
-      let list = this.state.items
-      items = reorder(
-        list,
-        result.source.index,
-        result.destination.index
-      );
+
+      let items = this.state.items;
+      console.log(items);
       items[result.destination.index].order = result.destination.index + 1;
       items[result.source.index].order = result.source.index + 1;
+      console.log(items);
+
+      items = reorder(items, result.source.index, result.destination.index)
+
+      this.setState({
+        items
+      })
     }
 
-    if(result.type.indexOf('answer') >= 0){
-      let questionId = parseInt(result.type.split('answer-')[1]) - 1;
-      var list = this.state.items[questionId].answers;
-      let answers = reorder(
-        list,
-        result.source.index,
-        result.destination.index
-      );
-      answers[result.destination.index].order = result.destination.index + 1;
-      answers[result.source.index].order = result.source.index + 1;
-      let items = this.state.items;
-      items[questionId].answers = answers;
-    }
+    // if(result.type.indexOf('answer') >= 0){
+    //   let questionId = parseInt(result.type.split('answer-')[1]) - 1;
+    //   var list = this.state.items[questionId].answers;
+    //   let answers = reorder(
+    //     list,
+    //     result.source.index,
+    //     result.destination.index
+    //   );
+    //   answers[result.destination.index].order = result.destination.index + 1;
+    //   answers[result.source.index].order = result.source.index + 1;
+    //   let items = this.state.items;
+    //   items[questionId].answers = answers;
+    // }
 
-    this.setState({items});
-
-    // QuizStore.setQuiz(items);
+    // this.setState({items});
   }
 
   render() {

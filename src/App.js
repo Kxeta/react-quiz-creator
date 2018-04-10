@@ -6,10 +6,7 @@ import { SortableList, DragDropComponent } from './components';
 
 export default class App extends Component {
 
-  componentWillMount(){
-    let items = this.getContentJSON();
-    QuizStore.setQuiz(items);
-  }
+ 
   updateStateJSON = () => {
 
   }
