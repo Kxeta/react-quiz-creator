@@ -1,8 +1,9 @@
 import { EditorComponent } from './editor';
-import { DroppableComponent, DraggableComponent } from './sortable';
+import { DragDropComponent, DroppableComponent, DraggableComponent } from './sortable';
 
 export {
   EditorComponent,
+  DragDropComponent,
   DroppableComponent,
   DraggableComponent
 }

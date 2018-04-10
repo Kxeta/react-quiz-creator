@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { Droppable } from 'react-beautiful-dnd';
 import PropTypes from 'prop-types';
-import { QuizStore } from '../../modules';
 import DraggableComponent from './DraggableComponent';
-import './SortableComponent.scss';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -16,7 +14,9 @@ const reorder = (list, startIndex, endIndex) => {
 export default class DroppableComponent extends Component{
 
   static propTypes = { 
-    items: PropTypes.object,
+    items: PropTypes.array,
+    type: PropTypes.string,
+    droppableId: PropTypes.string,
   };
 
   constructor(props) {
@@ -24,42 +24,21 @@ export default class DroppableComponent extends Component{
     this.state = {
       items: this.props.items
     };
-    this.onDragEnd = this.onDragEnd.bind(this);
-  }
-
-  onDragEnd(result) {
-    // dropped outside the list
-    if (!result.destination) {
-      return;
-    }
-
-
-    const items = reorder(
-      this.state.items,
-      result.source.index,
-      result.destination.index
-    );
-    this.setState({
-      items
-    });
-    QuizStore.setQuiz(items);
   }
 
   render() {
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
-        <Droppable droppableId="quiz-droppable-wrapper">
-          {(provided, snapshot) => (
-            <div
-              ref={provided.innerRef}>
-              {this.state.items.map((item, index) => (
-                <DraggableComponent item={ item } index={ index }></DraggableComponent>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <Droppable type={ this.props.type } droppableId={ this.props.droppableId } key={ this.props.droppableId }>
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}>
+            {this.props.items.map((item, index) => (
+              <DraggableComponent type={ this.props.type } item={ item } index={ index }></DraggableComponent>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
     );
   }
   

@@ -1,8 +1,6 @@
 import ReactQuill from 'react-quill';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { inject, observer } from 'mobx-react';
-import { QuizStore } from '../../modules';
 import './EditorComponent.scss';
 
 

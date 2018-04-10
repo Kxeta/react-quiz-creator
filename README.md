@@ -11,5 +11,4 @@ I intend that with this project you can:
  - Babel
  - Webpack
  - Quill as RichText editor (React-quill)
- - Deciding which plugin to use for draggable sort
- - Starting to use Mobx for state management
+ - React-beautiful-dnd to sort with drag and drop the elements

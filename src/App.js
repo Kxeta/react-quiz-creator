@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { Provider } from 'mobx-react';
 import './styles/main.scss';
-import { SortableList, DroppableComponent } from './components';
-import { QuizStore } from './modules';
+import { SortableList, DragDropComponent } from './components';
 
 
 
@@ -17,41 +15,57 @@ export default class App extends Component {
   }
   
   getContentJSON = () => {
-    return [
+    const json = [{
+      id: null,
+      order: 1,
+      content: "Question 1 - criando um quiz novo",
+      quizId: null,
+      required: true,
+      answers: [
+          {
+              content: "Resposta da pergunta novo 1 - 1",
+              correct: true,
+              id: null,
+              order: 1,
+              questionId: null,
+          },
+          {
+              content: "Resposta da pergunta novo 1 - 2",
+              correct: false,
+              id: null,
+              order: 2,
+              questionId: null,
+          }
+      ]
+  },
       {
-        "question" : {
-          "content" : "<p>Teste questão 1</p>",
-          "order" : 1,
-          "answers" : [
-            {
-              "content": "<strong> WUlll!</strong>"
-            },
-            {
-              "content": "<strong> Wazaaa!</strong>"
-            },
-            {
-              "content": "<em> Aguwia!</em>"
-            }
+          id: null,
+          order: 2,
+          content: "Question 2 - criando um quiz novo 2",
+          quizId: null,
+          required: false,
+          answers: [
+              {
+                  content: "Resposta da pergunta novo 2 - 1",
+                  correct: false,
+                  id: null,
+                  order: 1,
+                  questionId: null,
+              },
+              {
+                  content: "Resposta da pergunta novo 2 - 2",
+                  correct: true,
+                  id: null,
+                  order: 2,
+                  questionId: null,
+              }
           ]
-        }
-      },
-      {
-        "question" : {
-          "content" : "<p>Teste questão <b>2</b></p>",
-          "order" : 2,
-          "answers" : []
-        }
       }
-    ];
+  ];
+  return json;
   }
 
-  renderQuiz = () =>{
-  }
   render () {
-    return (
-      <Provider QuizStore = { QuizStore }>
-        <DroppableComponent items={QuizStore.questions} />
-      </Provider>
-    );
+    return <DragDropComponent type='question' items={this.getContentJSON()}droppableId='question-droppable'/>
   }
 }
