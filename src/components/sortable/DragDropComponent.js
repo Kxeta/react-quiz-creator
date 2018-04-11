@@ -28,7 +28,6 @@ export default class DragDropComponent extends Component{
     };
     this.onDragEnd = this.onDragEnd.bind(this);
   }
-
  
 
   onDragEnd(result) {
@@ -37,38 +36,48 @@ export default class DragDropComponent extends Component{
       return;
     }
 
-
-
+    console.log(result);
 
 
     if(result.type.indexOf('question') >= 0){
-
-      let items = this.state.items;
-      console.log(items);
-      items[result.destination.index].order = result.destination.index + 1;
-      items[result.source.index].order = result.source.index + 1;
-      console.log(items);
-
-      items = reorder(items, result.source.index, result.destination.index)
+      const destination = result.destination.index;
+      const begin = result.source.index;
+      let items = [...this.state.items];
+      items = reorder(items, begin, destination)
 
       this.setState({
         items
-      })
+      }, () => {console.log('updated questions!', this.state.items)})
     }
 
-    // if(result.type.indexOf('answer') >= 0){
-    //   let questionId = parseInt(result.type.split('answer-')[1]) - 1;
-    //   var list = this.state.items[questionId].answers;
-    //   let answers = reorder(
-    //     list,
-    //     result.source.index,
-    //     result.destination.index
-    //   );
-    //   answers[result.destination.index].order = result.destination.index + 1;
-    //   answers[result.source.index].order = result.source.index + 1;
-    //   let items = this.state.items;
-    //   items[questionId].answers = answers;
-    // }
+    if(result.type.indexOf('answer') >= 0){
+      let items = this.state.items;
+      let questionId = parseInt(result.draggableId.split('-')[1]);
+      let questionIndex = -1;
+      items.find(function(item, i){
+        if(item.id === questionId){
+          questionIndex = i;
+          return i;
+        }
+      });
+      var list = items[questionIndex].answers;
+      let answers = reorder(
+        list,
+        result.source.index,
+        result.destination.index
+      );
+      items.find(function(item, i){
+        if(item.name === questionId){
+          questionIndex = i;
+          return i;
+        }
+      });
+      items[questionIndex].answers = answers;
+      console.log(items[questionIndex].answers);
+      this.setState({
+        items
+      }, () => {console.log('updated answers!', this.state.items)})
+    }
 
     // this.setState({items});
   }

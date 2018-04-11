@@ -25,6 +25,11 @@ export default class DroppableComponent extends Component{
       items: this.props.items
     };
   }
+  componentWillReceiveProps(nextProps) {
+    if(this.state.items != nextProps.items){
+      this.setState({items: nextProps.items});
+    }
+  }
 
   render() {
     return (
@@ -32,7 +37,7 @@ export default class DroppableComponent extends Component{
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}>
-            {this.props.items.map((item, index) => (
+            {this.state.items.map((item, index) => (
               <DraggableComponent type={ this.props.type } item={ item } index={ index }></DraggableComponent>
             ))}
             {provided.placeholder}

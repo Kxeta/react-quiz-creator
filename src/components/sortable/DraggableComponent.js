@@ -11,13 +11,27 @@ export default class DraggableComponent extends Component{
     index: PropTypes.number,
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      item: this.props.item
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(this.state.item != nextProps.item){
+      this.setState({item: nextProps.item});
+    }
+  }
+
   renderAnswers = (answers, questionKey) => {
     let answersArr = [];
     return(<DroppableComponent key={`answer-${questionKey}`} type={`answer-${questionKey}`} items={answers} droppableId={`answer-droppable-${questionKey}`}/>)    
   }
 
   render() {
-    const { item, index, type } = this.props;
+    const { index, type } = this.props;
+    const item = this.state.item;
     this.renderAnswers();
     return (
       <Draggable key={`${type}-${item.order}`} type={ type } draggableId={`${type}-${item.order}`} index={index}>
