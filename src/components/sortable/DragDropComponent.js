@@ -50,7 +50,7 @@ export default class DragDropComponent extends Component{
       }, () => {console.log('updated questions!', this.state.items)})
     }
 
-    if(result.type.indexOf('answer') >= 0){
+    else if(result.type.indexOf('answer') >= 0){
       let items = this.state.items;
       let questionId = parseInt(result.draggableId.split('-')[1]);
       let questionIndex = -1;

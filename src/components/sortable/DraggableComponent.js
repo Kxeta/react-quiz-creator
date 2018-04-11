@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import PropTypes from 'prop-types';
-import { EditorComponent } from '..';
+import { EditorComponent, Checkbox } from '..';
 import DroppableComponent from './DroppableComponent';
 import './SortableComponent.scss';
 
@@ -24,6 +24,17 @@ export default class DraggableComponent extends Component{
     }
   }
 
+  createCheckbox = () => {
+    let item = this.state.item;
+    if(this.props.type.indexOf('answer') >= 0){
+      return (<Checkbox label={'Correta'} isChecked={item.correct} className={`correct-answer-${item.order}`}/>);
+    }
+    else if (this.props.type.indexOf('question') >= 0){
+      return(<Checkbox label={'Obrigatória'} isChecked={item.required} className='required-question'/>)
+    }
+    return ;
+  }
+
   renderAnswers = (answers, questionKey) => {
     let answersArr = [];
     return(<DroppableComponent key={`answer-${questionKey}`} type={`answer-${questionKey}`} items={answers} droppableId={`answer-droppable-${questionKey}`}/>)    
@@ -43,6 +54,7 @@ export default class DraggableComponent extends Component{
               className='quiz-container'>
               <span {...provided.dragHandleProps} style={{ display: 'inline-block', margin: '0 10px', border: '1px solid #000'}}>Drag</span>
               <EditorComponent content={item.content}></EditorComponent>
+              {this.createCheckbox()}
               { item.answers && item.answers.length ? 
                 this.renderAnswers(item.answers, item.order)
                 :
