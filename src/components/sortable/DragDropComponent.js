@@ -29,15 +29,17 @@ export default class DragDropComponent extends Component{
     this.onDragEnd = this.onDragEnd.bind(this);
   }
  
+  componentWillReceiveProps(nextProps) {
+    if(this.state.items != nextProps.items){
+      this.setState({items: nextProps.items});
+    }
+  }
 
   onDragEnd(result) {
     // dropped outside the list
     if (!result.destination) {
       return;
     }
-
-    console.log(result);
-
 
     if(result.type.indexOf('question') >= 0){
       const destination = result.destination.index;
@@ -47,12 +49,12 @@ export default class DragDropComponent extends Component{
 
       this.setState({
         items
-      }, () => {console.log('updated questions!', this.state.items)})
+      })
     }
 
     else if(result.type.indexOf('answer') >= 0){
       let items = this.state.items;
-      let questionId = parseInt(result.draggableId.split('-')[1]);
+      let questionId = parseInt(result.type.split('-')[1]);
       let questionIndex = -1;
       items.find(function(item, i){
         if(item.id === questionId){
@@ -60,29 +62,35 @@ export default class DragDropComponent extends Component{
           return i;
         }
       });
-      var list = items[questionIndex].answers;
-      let answers = reorder(
-        list,
-        result.source.index,
-        result.destination.index
-      );
-      items.find(function(item, i){
-        if(item.name === questionId){
-          questionIndex = i;
-          return i;
-        }
-      });
-      items[questionIndex].answers = answers;
-      console.log(items[questionIndex].answers);
-      this.setState({
-        items
-      }, () => {console.log('updated answers!', this.state.items)})
+      if(questionIndex >= 0){
+        var list = items[questionIndex].answers;
+        let answers = reorder(
+          list,
+          result.source.index,
+          result.destination.index
+        );
+        items.find(function(item, i){
+          if(item.id === questionId){
+            questionIndex = i;
+            return i;
+          }
+        });
+        items[questionIndex].answers = answers;
+        console.log(items[questionIndex].answers);
+        this.setState({
+          items
+        })
+      }
+      else{
+        return;
+      }
     }
 
     // this.setState({items});
   }
 
   render() {
+    console.log('Render DragDrop!', this.state.items); 
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <DroppableComponent type={ this.props.type } items={this.state.items} droppableId={ this.props.droppableId }>

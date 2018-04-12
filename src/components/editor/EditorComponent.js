@@ -41,7 +41,7 @@ class EditorComponent extends Component {
         ['bold', 'italic', 'link']
       ]
     };
-    let classNames = this.props.className + ' editor-wrapper';
+    let classNames = this.props.className + ' rc-editor-wrapper';
     return (
       <ReactQuill value={ this.state.content || this.props.content }
                   theme="bubble"
@@ -52,7 +52,7 @@ class EditorComponent extends Component {
                   readOnly={ this.props.readOnly == true }
                   className={ classNames }
                   onChange={this.handleOnChange}
-                  bounds='#app'
+                  bounds='#questionsContent'
                   >
       </ReactQuill>
     )

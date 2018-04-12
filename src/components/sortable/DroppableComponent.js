@@ -25,6 +25,7 @@ export default class DroppableComponent extends Component{
       items: this.props.items
     };
   }
+
   componentWillReceiveProps(nextProps) {
     if(this.state.items != nextProps.items){
       this.setState({items: nextProps.items});
@@ -32,6 +33,7 @@ export default class DroppableComponent extends Component{
   }
 
   render() {
+    console.log('Render Drop!', this.state.items);
     return (
       <Droppable type={ this.props.type } droppableId={ this.props.droppableId } key={ this.props.droppableId }>
         {(provided, snapshot) => (
