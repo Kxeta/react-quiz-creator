@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
+import { inject, observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import DroppableComponent from './DroppableComponent';
 import './SortableComponent.scss';
+import { QuizStore } from '../../modules';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -14,34 +16,20 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-
+@inject('QuizStore')
+@observer
 export default class DragDropComponent extends Component{
 
   static propTypes = { 
-    items: PropTypes.array,
+    QuizStore: PropTypes.object,
     type: PropTypes.string,
-    droppableId: PropTypes.string,
-    callbackUpdate: PropTypes.func
+    droppableId: PropTypes.string
   };
 
   constructor(props) {
     super(props);
-    this.state = {
-      items: this.props.items
-    };
     this.onDragEnd = this.onDragEnd.bind(this);
   }
- 
-  componentWillReceiveProps(nextProps) {
-    if(JSON.stringify(this.state.items) != JSON.stringify(nextProps.items)){
-      this.setState({items: nextProps.items});
-    }
-  }
-
-  shouldComponentUpdate(nextProps, nextState){
-    return ((JSON.stringify(this.state.items) != JSON.stringify(nextProps.items)) ||
-           (JSON.stringify(this.state.items) != JSON.stringify(nextState.items)));
-   }
 
   onDragEnd(result) {
     // dropped outside the list
@@ -52,22 +40,16 @@ export default class DragDropComponent extends Component{
     if(result.type.indexOf('question') >= 0){
       const destination = result.destination.index;
       const begin = result.source.index;
-      let items = [...this.state.items];
+      let items = [...this.props.QuizStore.items];
       items = reorder(items, begin, destination)
       console.log('Reordered', items);
-      this.props.callbackUpdate(items);
+      QuizStore.setQuiz(items);
     }
 
     else if(result.type.indexOf('answer') >= 0){
-      let items = this.state.items;
+      let items = this.props.QuizStore.items;
       let questionId = parseInt(result.type.split('-')[1]);
-      let questionIndex = -1;
-      items.find(function(item, i){
-        if(item.id === questionId){
-          questionIndex = i;
-          return i;
-        }
-      });
+      let questionIndex = items.findIndex((item) => {return item.id === questionId});
       if(questionIndex >= 0){
         var list = items[questionIndex].answers;
         let answers = reorder(
@@ -75,15 +57,9 @@ export default class DragDropComponent extends Component{
           result.source.index,
           result.destination.index
         );
-        items.find(function(item, i){
-          if(item.id === questionId){
-            questionIndex = i;
-            return i;
-          }
-        });
         items[questionIndex].answers = answers;
         console.log('Reordered', items);
-        this.props.callbackUpdate(items);
+        QuizStore.setQuiz(items);
       }
       else{
         return;
@@ -92,10 +68,10 @@ export default class DragDropComponent extends Component{
   }
 
   render() {
-    console.log('Render DragDrop!', this.state.items); 
+    console.log('Render DragDrop!', this.props.QuizStore.items); 
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        <DroppableComponent type={ this.props.type } items={this.state.items} droppableId={ this.props.droppableId }>
+        <DroppableComponent type={ this.props.type } items={this.props.QuizStore.items} droppableId={ this.props.droppableId }>
         </DroppableComponent>
       </DragDropContext>
     );

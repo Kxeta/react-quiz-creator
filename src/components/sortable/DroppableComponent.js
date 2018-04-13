@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { inject, observer } from 'mobx-react';
 import { Droppable } from 'react-beautiful-dnd';
 import PropTypes from 'prop-types';
 import DraggableComponent from './DraggableComponent';
@@ -14,7 +15,7 @@ const reorder = (list, startIndex, endIndex) => {
 export default class DroppableComponent extends Component{
 
   static propTypes = { 
-    items: PropTypes.array,
+    items: PropTypes.object,
     type: PropTypes.string,
     droppableId: PropTypes.string,
   };
@@ -28,14 +29,10 @@ export default class DroppableComponent extends Component{
 
   componentWillReceiveProps(nextProps) {
     if(JSON.stringify(this.state.items) != JSON.stringify(nextProps.items)){
-      this.setState({items: nextProps.items});
+      this.setState({items: nextProps.items},
+      ()=>{console.log('updatedDropState', this.state.items)});
     }
   }
-
-  shouldComponentUpdate(nextProps, nextState){
-    return ((JSON.stringify(this.state.items) != JSON.stringify(nextProps.items)) ||
-           (JSON.stringify(this.state.items) != JSON.stringify(nextState.items)));
-   }
 
   render() {
     console.log('Render Drop!', this.state.items);

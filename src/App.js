@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { Provider } from 'mobx-react';
 import './styles/main.scss';
-import { SortableList, DragDropComponent } from './components';
+import { DragDropComponent } from './components';
+import { QuizStore } from './modules';
 
 
 
@@ -24,10 +26,7 @@ export default class App extends Component {
   }
  
   updateQuizStateJSON = (items) => {
-
-    this.setState({
-      items
-    });
+    QuizStore.setQuiz(items)
   }
   
   getContentJSON = () => {
@@ -91,6 +90,10 @@ export default class App extends Component {
   }
 
   render () {
-    return <DragDropComponent type='question' items={this.state.items} callbackUpdate={this.updateQuizStateJSON} droppableId='question-droppable'/>
+    return (
+      <Provider QuizStore = { QuizStore }>
+        <DragDropComponent type='question' items={ QuizStore } callbackUpdate={this.updateQuizStateJSON} droppableId='question-droppable'/>
+      </Provider>
+    );
   }
 }

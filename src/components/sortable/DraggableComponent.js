@@ -18,10 +18,15 @@ export default class DraggableComponent extends Component{
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(JSON.stringify(this.state.item) != JSON.stringify(nextProps.item)){
+      this.setState({item: nextProps.item});
+    }
+  }
+
   shouldComponentUpdate(nextProps, nextState){
-    return ((JSON.stringify(this.state.item) != JSON.stringify(nextProps.item)) ||
-           (JSON.stringify(this.state.item) != JSON.stringify(nextState.item)));
-   }
+    return (JSON.stringify(this.state.item) != JSON.stringify(nextState.item));
+  }
 
   createCheckbox = () => {
     let item = this.state.item;
@@ -37,12 +42,12 @@ export default class DraggableComponent extends Component{
   renderAnswers = (answers, questionKey) => {
     let answersArr = [];
     return(<DroppableComponent key={`answer-${questionKey}`} type={`answer-${questionKey}`} items={answers} droppableId={`answer-droppable-${questionKey}`}/>)    
+    // return false;
   }
 
   render() {
     const { index, type } = this.props;
     const item = this.state.item;
-    this.renderAnswers();
     console.log('Render Drag!', this.state.item);
     return (
       <Draggable key={`${type}-${item.id}`} type={ type } draggableId={`${type}-${item.id}`} index={index}>
