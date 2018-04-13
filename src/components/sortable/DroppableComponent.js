@@ -27,10 +27,15 @@ export default class DroppableComponent extends Component{
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.state.items != nextProps.items){
+    if(JSON.stringify(this.state.items) != JSON.stringify(nextProps.items)){
       this.setState({items: nextProps.items});
     }
   }
+
+  shouldComponentUpdate(nextProps, nextState){
+    return ((JSON.stringify(this.state.items) != JSON.stringify(nextProps.items)) ||
+           (JSON.stringify(this.state.items) != JSON.stringify(nextState.items)));
+   }
 
   render() {
     console.log('Render Drop!', this.state.items);

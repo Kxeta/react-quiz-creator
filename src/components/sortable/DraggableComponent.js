@@ -18,11 +18,10 @@ export default class DraggableComponent extends Component{
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if(this.state.item != nextProps.item){
-      this.setState({items: nextProps.item});
-    }
-  }
+  shouldComponentUpdate(nextProps, nextState){
+    return ((JSON.stringify(this.state.item) != JSON.stringify(nextProps.item)) ||
+           (JSON.stringify(this.state.item) != JSON.stringify(nextState.item)));
+   }
 
   createCheckbox = () => {
     let item = this.state.item;
@@ -44,7 +43,7 @@ export default class DraggableComponent extends Component{
     const { index, type } = this.props;
     const item = this.state.item;
     this.renderAnswers();
-    console.log('Render Drag!', this.state.items);
+    console.log('Render Drag!', this.state.item);
     return (
       <Draggable key={`${type}-${item.id}`} type={ type } draggableId={`${type}-${item.id}`} index={index}>
         {(provided, snapshot) => (
@@ -54,7 +53,7 @@ export default class DraggableComponent extends Component{
               {...provided.draggableProps}
               className='rc-quiz-container'>
               <span {...provided.dragHandleProps} style={{ display: 'inline-block', margin: '0 10px', border: '1px solid #000'}}>Drag</span>
-              <EditorComponent content={item.text}></EditorComponent>
+              <EditorComponent content={item.text} type={type} parentId={item.questionId} selfId={item.id} ></EditorComponent>
               {this.createCheckbox()}
               { item.answers && item.answers.length ? 
                 this.renderAnswers(item.answers, item.id)

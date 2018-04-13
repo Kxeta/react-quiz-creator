@@ -8,6 +8,8 @@ const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
+  result[startIndex].order = startIndex + 1;
+  result[endIndex].order = endIndex + 1;
 
   return result;
 };
@@ -19,6 +21,7 @@ export default class DragDropComponent extends Component{
     items: PropTypes.array,
     type: PropTypes.string,
     droppableId: PropTypes.string,
+    callbackUpdate: PropTypes.func
   };
 
   constructor(props) {
@@ -30,10 +33,15 @@ export default class DragDropComponent extends Component{
   }
  
   componentWillReceiveProps(nextProps) {
-    if(this.state.items != nextProps.items){
+    if(JSON.stringify(this.state.items) != JSON.stringify(nextProps.items)){
       this.setState({items: nextProps.items});
     }
   }
+
+  shouldComponentUpdate(nextProps, nextState){
+    return ((JSON.stringify(this.state.items) != JSON.stringify(nextProps.items)) ||
+           (JSON.stringify(this.state.items) != JSON.stringify(nextState.items)));
+   }
 
   onDragEnd(result) {
     // dropped outside the list
@@ -46,10 +54,8 @@ export default class DragDropComponent extends Component{
       const begin = result.source.index;
       let items = [...this.state.items];
       items = reorder(items, begin, destination)
-
-      this.setState({
-        items
-      })
+      console.log('Reordered', items);
+      this.props.callbackUpdate(items);
     }
 
     else if(result.type.indexOf('answer') >= 0){
@@ -76,17 +82,13 @@ export default class DragDropComponent extends Component{
           }
         });
         items[questionIndex].answers = answers;
-        console.log(items[questionIndex].answers);
-        this.setState({
-          items
-        })
+        console.log('Reordered', items);
+        this.props.callbackUpdate(items);
       }
       else{
         return;
       }
     }
-
-    // this.setState({items});
   }
 
   render() {

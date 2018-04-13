@@ -15,8 +15,13 @@ export default class App extends Component {
 
   componentDidMount() {
     window.updateQuizStateJSON = this.updateQuizStateJSON;
+    window.getQuizStateJSON = this.getQuizStateJSON;
+    this.updateQuizStateJSON(this.getContentJSON());
    }
 
+  getQuizStateJSON = () =>{
+    return this.state.items;
+  }
  
   updateQuizStateJSON = (items) => {
 
@@ -86,6 +91,6 @@ export default class App extends Component {
   }
 
   render () {
-    return <DragDropComponent type='question' items={this.getContentJSON()} droppableId='question-droppable'/>
+    return <DragDropComponent type='question' items={this.state.items} callbackUpdate={this.updateQuizStateJSON} droppableId='question-droppable'/>
   }
 }

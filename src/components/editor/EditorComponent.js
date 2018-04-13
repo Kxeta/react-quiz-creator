@@ -13,6 +13,9 @@ class EditorComponent extends Component {
     className: PropTypes.string,
     placeholder: PropTypes.string,
     readOnly: PropTypes.bool,
+    type: PropTypes.string,
+    parentId: PropTypes.number,
+    selfId: PropTypes.number
   };
 
   constructor(props){
@@ -31,6 +34,30 @@ class EditorComponent extends Component {
       content : this.props.content
     })
   }
+
+  onKeyUp = (event) => {
+    if(this.props.type.indexOf("answer") >= 0){
+      console.log('Answer', event.keyCode);
+      if(event.keyCode === 13) {
+        //Enter keyCode
+        //TODO: add new answer
+        console.log(this.props.selfId, this.props.parentId);
+      }
+    }
+    else if(this.props.type.indexOf("question") >= 0){
+      console.log('Question', event.keyCode);
+      if(event.keyCode === 9) {
+        //Tab keyCode
+        //TODO: add new answer
+        console.log(this.props.selfId);
+      }
+    }
+    else{
+      console.log('nothing');
+    }
+  }
+
+
 
   render() {
     let formats = this.props.formats || [
@@ -53,6 +80,7 @@ class EditorComponent extends Component {
                   className={ classNames }
                   onChange={this.handleOnChange}
                   bounds='#questionsContent'
+                  onKeyUp={this.onKeyUp}
                   >
       </ReactQuill>
     )
