@@ -2,6 +2,7 @@ import ReactQuill from 'react-quill';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './EditorComponent.scss';
+import { QuizStore } from '../../modules';
 
 
 class EditorComponent extends Component {
@@ -14,8 +15,8 @@ class EditorComponent extends Component {
     placeholder: PropTypes.string,
     readOnly: PropTypes.bool,
     type: PropTypes.string,
-    parentId: PropTypes.number,
-    selfId: PropTypes.number
+    parentId: PropTypes.string,
+    selfId: PropTypes.string
   };
 
   constructor(props){
@@ -35,28 +36,9 @@ class EditorComponent extends Component {
     })
   }
 
-  onKeyUp = (event) => {
-    if(this.props.type.indexOf("answer") >= 0){
-      console.log('Answer', event.keyCode);
-      if(event.keyCode === 13) {
-        //Enter keyCode
-        //TODO: add new answer
-        console.log(this.props.selfId, this.props.parentId);
-      }
-    }
-    else if(this.props.type.indexOf("question") >= 0){
-      console.log('Question', event.keyCode);
-      if(event.keyCode === 9) {
-        //Tab keyCode
-        //TODO: add new answer
-        console.log(this.props.selfId);
-      }
-    }
-    else{
-      console.log('nothing');
-    }
+  onKeyEnterHandler = () => {
+      QuizStore.addAnswer(this.props.parentId || this.props.selfId);
   }
-
 
 
   render() {
@@ -66,7 +48,16 @@ class EditorComponent extends Component {
     let modules = this.props.modules || {
       toolbar:[
         ['bold', 'italic', 'link']
-      ]
+      ],
+      keyboard: {
+        bindings: {
+          tab: 'disabled',
+          enter: {
+            key: 13,
+            handler: this.onKeyEnterHandler
+          }
+        }
+      }
     };
     let classNames = this.props.className + ' rc-editor-wrapper';
     return (
@@ -80,7 +71,6 @@ class EditorComponent extends Component {
                   className={ classNames }
                   onChange={this.handleOnChange}
                   bounds='#questionsContent'
-                  onKeyUp={this.onKeyUp}
                   >
       </ReactQuill>
     )

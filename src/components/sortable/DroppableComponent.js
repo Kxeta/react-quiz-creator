@@ -29,13 +29,19 @@ export default class DroppableComponent extends Component{
 
   componentWillReceiveProps(nextProps) {
     if(JSON.stringify(this.state.items) != JSON.stringify(nextProps.items)){
-      this.setState({items: nextProps.items},
-      ()=>{console.log('updatedDropState', this.state.items)});
+      this.setState({items: nextProps.items});
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return (JSON.stringify(this.state.items) != JSON.stringify(nextState.items))
   }
 
   render() {
     console.log('Render Drop!', this.state.items);
+    if(!this.state.items){
+      return null;
+    }
     return (
       <Droppable type={ this.props.type } droppableId={ this.props.droppableId } key={ this.props.droppableId }>
         {(provided, snapshot) => (

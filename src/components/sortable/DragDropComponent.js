@@ -40,14 +40,14 @@ export default class DragDropComponent extends Component{
     if(result.type.indexOf('question') >= 0){
       const destination = result.destination.index;
       const begin = result.source.index;
-      let items = [...this.props.QuizStore.items];
+      let items = [...this.props.QuizStore.quiz];
       items = reorder(items, begin, destination)
       console.log('Reordered', items);
       QuizStore.setQuiz(items);
     }
 
     else if(result.type.indexOf('answer') >= 0){
-      let items = this.props.QuizStore.items;
+      let items = this.props.QuizStore.quiz;
       let questionId = parseInt(result.type.split('-')[1]);
       let questionIndex = items.findIndex((item) => {return item.id === questionId});
       if(questionIndex >= 0){
@@ -68,10 +68,10 @@ export default class DragDropComponent extends Component{
   }
 
   render() {
-    console.log('Render DragDrop!', this.props.QuizStore.items); 
+    console.log('Render DragDrop!', this.props.QuizStore.quiz); 
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        <DroppableComponent type={ this.props.type } items={this.props.QuizStore.items} droppableId={ this.props.droppableId }>
+        <DroppableComponent type={ this.props.type } items={this.props.QuizStore.quiz} droppableId={ this.props.droppableId }>
         </DroppableComponent>
       </DragDropContext>
     );

@@ -40,7 +40,6 @@ export default class DraggableComponent extends Component{
   }
 
   renderAnswers = (answers, questionKey) => {
-    let answersArr = [];
     return(<DroppableComponent key={`answer-${questionKey}`} type={`answer-${questionKey}`} items={answers} droppableId={`answer-droppable-${questionKey}`}/>)    
     // return false;
   }
@@ -48,9 +47,10 @@ export default class DraggableComponent extends Component{
   render() {
     const { index, type } = this.props;
     const item = this.state.item;
+    let itemId = item.id || 'new-' + Math.floor(Math.random()*100*Math.random()*5);
     console.log('Render Drag!', this.state.item);
     return (
-      <Draggable key={`${type}-${item.id}`} type={ type } draggableId={`${type}-${item.id}`} index={index}>
+      <Draggable key={`${type}-${itemId}`} type={ type } draggableId={`${type}-${itemId}`} id={index} index={index}>
         {(provided, snapshot) => (
           <div>
             <div
@@ -58,10 +58,10 @@ export default class DraggableComponent extends Component{
               {...provided.draggableProps}
               className='rc-quiz-container'>
               <span {...provided.dragHandleProps} style={{ display: 'inline-block', margin: '0 10px', border: '1px solid #000'}}>Drag</span>
-              <EditorComponent content={item.text} type={type} parentId={item.questionId} selfId={item.id} ></EditorComponent>
+              <EditorComponent content={item.text} type={type} parentId={item.questionId} selfId={itemId} ></EditorComponent>
               {this.createCheckbox()}
               { item.answers && item.answers.length ? 
-                this.renderAnswers(item.answers, item.id)
+                this.renderAnswers(item.answers, itemId)
                 :
                 ''
               }

@@ -2,12 +2,16 @@
 import { observable, action, computed } from 'mobx';
 
 class QuizStore {
-  @observable items = [];
+  @observable items = '[]';
 
   //Set Store
   @action
    setQuiz (items) {
-     this.items = items;
+     this.items = JSON.stringify(items);
+   }
+
+   get quiz () {
+     return JSON.parse(this.items);
    }
 
    //Update Element's Content on the Store
@@ -45,7 +49,20 @@ class QuizStore {
    }
    @action
    addAnswer(questionId){
-    //TODO
+    let newAnswer = { 
+      "id":null,
+      "text":"Nova Resposta",
+      "correct":false,
+      "order":null,
+      "questionId": questionId
+    }
+    let modItems = this.quiz;
+    let questionIndex = modItems.findIndex((item) => {return item.id === questionId});
+    modItems[questionIndex].answers.push(newAnswer);
+
+    this.setQuiz(modItems);
+
+    console.log('New Answer', questionId, this.quiz);
    }
 
    //Remove actions
