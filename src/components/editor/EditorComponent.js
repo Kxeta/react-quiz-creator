@@ -15,8 +15,14 @@ class EditorComponent extends Component {
     placeholder: PropTypes.string,
     readOnly: PropTypes.bool,
     type: PropTypes.string,
-    parentId: PropTypes.string,
-    selfId: PropTypes.string
+    parentId: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number
+    ]),
+    selfId: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number
+    ])
   };
 
   constructor(props){

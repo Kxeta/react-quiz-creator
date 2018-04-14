@@ -15,7 +15,10 @@ const reorder = (list, startIndex, endIndex) => {
 export default class DroppableComponent extends Component{
 
   static propTypes = { 
-    items: PropTypes.object,
+    items: PropTypes.oneOfType([
+      PropTypes.array,
+      PropTypes.object
+    ]),
     type: PropTypes.string,
     droppableId: PropTypes.string,
   };

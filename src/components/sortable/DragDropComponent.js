@@ -47,8 +47,8 @@ export default class DragDropComponent extends Component{
 
     else if(result.type.indexOf('answer') >= 0){
       let items = this.props.QuizStore.quiz;
-      let questionId = parseInt(result.type.split('-')[1]);
-      let questionIndex = items.findIndex((item) => {return item.id === questionId});
+      let questionId = result.type.split('-')[1];
+      let questionIndex = items.findIndex((item) => {return item.id == questionId});
       if(questionIndex >= 0){
         var list = items[questionIndex].answers;
         let answers = reorder(

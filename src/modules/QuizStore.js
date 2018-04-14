@@ -44,23 +44,44 @@ class QuizStore {
    //CRUD actions
    //ADD actions
    @action
-   addQuestion(prevQuestionId = 0){
-    //TODO
+   addQuestion(quizId, prevQuestionId = 0){    
+    let newQuestion = { 
+      "id": "new-" + Math.floor(Math.random()*100*Math.random()*5),
+      "text": "",
+      "quizId": quizId,
+      "order": null,
+      "answers": [],
+      "required": false
+    }
+    let modQuiz = this.quiz;
+    if (prevQuestionId) {
+      let questionIndex = modQuiz.findIndex((item) => {return item.id === prevQuestionId});
+      let result = Array.from(modQuiz);
+      result.splice(questionIndex, 0, newQuestion);
+      modQuiz = result;
+    }
+    else{
+      modQuiz.push(newQuestion);
+    }
+
+    this.setQuiz(modQuiz);
+
+    console.log('New Question', this.quiz);
    }
    @action
    addAnswer(questionId){
     let newAnswer = { 
-      "id":null,
-      "text":"Nova Resposta",
+      "id":"new-" + Math.floor(Math.random()*100*Math.random()*5),
+      "text": "",
       "correct":false,
       "order":null,
       "questionId": questionId
     }
-    let modItems = this.quiz;
-    let questionIndex = modItems.findIndex((item) => {return item.id === questionId});
-    modItems[questionIndex].answers.push(newAnswer);
+    let modQuiz = this.quiz;
+    let questionIndex = modQuiz.findIndex((item) => {return item.id === questionId});
+    modQuiz[questionIndex].answers.push(newAnswer);
 
-    this.setQuiz(modItems);
+    this.setQuiz(modQuiz);
 
     console.log('New Answer', questionId, this.quiz);
    }
@@ -68,17 +89,46 @@ class QuizStore {
    //Remove actions
    @action
    removeQuestion(id){
-    //TODO
+    let modQuiz = this.quiz;
+    let questionIndex = modQuiz.findIndex((item) => {return item.id === id});
+    const result = Array.from(modQuiz);
+    const [removed] = result.splice(questionIndex, 1);
+
+    this.setQuiz(result);
    }
    @action
    removeAnswer(id, questionId){
-    //TODO
+    let modQuiz = this.quiz;
+    let questionIndex = modQuiz.findIndex((item) => {return item.id === questionId});
+    const result = Array.from(modQuiz[questionIndex].answers);
+    let answerIndex = result.findIndex((item) => {return item.id === id});
+    const [removed] = result.splice(answerIndex, 1);
+    modQuiz[questionIndex].answers = result
+    this.setQuiz(modQuiz);
    }
 
   //Duplicate actions
   @action
   duplicateQuestion(id){
-    //TODO
+    let modQuiz = this.quiz;
+    let questionIndex = modQuiz.findIndex((item) => {return item.id === id});
+    let questionCopy = { 
+      "id": "new-" + Math.floor((Math.random() + 1)*100*Math.random()*5),
+      "text": modQuiz[questionIndex].text,
+      "quizId": modQuiz[questionIndex].quizId,
+      "order": null,
+      "answers": [],
+      "required": modQuiz[questionIndex].required
+    };
+    for (let i in modQuiz[questionIndex].answers){
+      let answerCopy = modQuiz[questionIndex].answers[i];
+      answerCopy.id = "new-" + Math.floor(Math.random()*100*Math.random()*5);
+      questionCopy.answers.push(answerCopy);
+    }
+    modQuiz.splice(questionIndex + 1, 0, questionCopy);
+
+    this.setQuiz(modQuiz);
+    return questionCopy.id;
   }
 }
 
