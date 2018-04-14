@@ -37,7 +37,16 @@ class EditorComponent extends Component {
   }
 
   onKeyEnterHandler = () => {
-      QuizStore.addAnswer(this.props.parentId || this.props.selfId);
+    console.log('Enter!', this.props.parentId, this.props.selfId);
+    QuizStore.addAnswer(this.props.parentId || this.props.selfId);
+    this.focusNewAnser();
+  }
+
+  focusNewAnser = () =>{
+    const questionClass = document.activeElement.parentNode.parentNode.classList[1];
+    let allEl = document.querySelectorAll(`.${questionClass}`);
+    let lastEl = allEl[allEl.length - 1]
+    lastEl.querySelector('.ql-editor').focus();
   }
 
 

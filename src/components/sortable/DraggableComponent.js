@@ -47,8 +47,14 @@ export default class DraggableComponent extends Component{
   render() {
     const { index, type } = this.props;
     const item = this.state.item;
-    let itemId = item.id || 'new-' + Math.floor(Math.random()*100*Math.random()*5);
-    console.log('Render Drag!', this.state.item);
+    const itemId = item.id || 'new-' + Math.floor(Math.random()*100*Math.random()*5);
+    let customClassName = '';
+    if(type == 'question'){
+      customClassName = `question-${itemId}`;
+    }
+    else{
+      customClassName = `question-${item.questionId} answer-${itemId}`;
+    }
     return (
       <Draggable key={`${type}-${itemId}`} type={ type } draggableId={`${type}-${itemId}`} id={index} index={index}>
         {(provided, snapshot) => (
@@ -58,7 +64,7 @@ export default class DraggableComponent extends Component{
               {...provided.draggableProps}
               className='rc-quiz-container'>
               <span {...provided.dragHandleProps} style={{ display: 'inline-block', margin: '0 10px', border: '1px solid #000'}}>Drag</span>
-              <EditorComponent content={item.text} type={type} parentId={item.questionId} selfId={itemId} ></EditorComponent>
+              <EditorComponent content={item.text} className={customClassName} type={type} parentId={item.questionId} selfId={itemId} ></EditorComponent>
               {this.createCheckbox()}
               { item.answers && item.answers.length ? 
                 this.renderAnswers(item.answers, itemId)

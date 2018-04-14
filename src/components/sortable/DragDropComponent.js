@@ -42,7 +42,6 @@ export default class DragDropComponent extends Component{
       const begin = result.source.index;
       let items = [...this.props.QuizStore.quiz];
       items = reorder(items, begin, destination)
-      console.log('Reordered', items);
       QuizStore.setQuiz(items);
     }
 
@@ -58,7 +57,6 @@ export default class DragDropComponent extends Component{
           result.destination.index
         );
         items[questionIndex].answers = answers;
-        console.log('Reordered', items);
         QuizStore.setQuiz(items);
       }
       else{
@@ -68,7 +66,6 @@ export default class DragDropComponent extends Component{
   }
 
   render() {
-    console.log('Render DragDrop!', this.props.QuizStore.quiz); 
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <DroppableComponent type={ this.props.type } items={this.props.QuizStore.quiz} droppableId={ this.props.droppableId }>

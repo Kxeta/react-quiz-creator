@@ -38,7 +38,6 @@ export default class DroppableComponent extends Component{
   }
 
   render() {
-    console.log('Render Drop!', this.state.items);
     if(!this.state.items){
       return null;
     }
