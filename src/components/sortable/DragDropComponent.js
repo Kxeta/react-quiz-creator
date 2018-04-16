@@ -42,7 +42,7 @@ export default class DragDropComponent extends Component{
       const begin = result.source.index;
       let items = [...this.props.QuizStore.quiz];
       items = reorder(items, begin, destination)
-      QuizStore.setQuiz(items);
+      QuizStore.quiz = items;
     }
 
     else if(result.type.indexOf('answer') >= 0){
@@ -57,7 +57,7 @@ export default class DragDropComponent extends Component{
           result.destination.index
         );
         items[questionIndex].answers = answers;
-        QuizStore.setQuiz(items);
+        QuizStore.quiz = items;
       }
       else{
         return;

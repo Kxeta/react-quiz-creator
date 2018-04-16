@@ -13,20 +13,29 @@ export default class App extends Component {
     this.state = {
       items: []
     }
+    if(window){
+      window.updateQuizStateJSON = this.updateQuizStateJSON;
+      window.getQuizStateJSON = this.getQuizStateJSON;
+    }
   }
 
   componentDidMount() {
     window.updateQuizStateJSON = this.updateQuizStateJSON;
     window.getQuizStateJSON = this.getQuizStateJSON;
-    this.updateQuizStateJSON(this.getContentJSON());
+    window.getQuizStateStringifiedJSON = this.getQuizStateStringifiedJSON;
+    // this.updateQuizStateJSON(this.getContentJSON());
    }
 
   getQuizStateJSON = () =>{
-    return this.state.items;
+    return QuizStore.getJSONQuiz();
+  }
+
+  getQuizStateStringifiedJSON = () =>{
+    return QuizStore.getStringfiedJSONQuiz();
   }
  
   updateQuizStateJSON = (items) => {
-    QuizStore.setQuiz(items)
+    QuizStore.quiz = items;
   }
   
   getContentJSON = () => {
@@ -92,7 +101,10 @@ export default class App extends Component {
   render () {
     return (
       <Provider QuizStore = { QuizStore }>
-        <DragDropComponent type='question' items={ QuizStore } callbackUpdate={this.updateQuizStateJSON} droppableId='question-droppable'/>
+        <div>
+          <DragDropComponent type='question' items={ QuizStore } callbackUpdate={this.updateQuizStateJSON} droppableId='question-droppable'/>
+          <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.getJSONQuiz(); } }>Get Json!</button>
+        </div>
       </Provider>
     );
   }

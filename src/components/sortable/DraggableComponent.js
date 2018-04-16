@@ -45,15 +45,15 @@ export default class DraggableComponent extends Component{
     if(this.props.type.indexOf('answer') >= 0){
       return (
         <div className='actions-wrapper'>
-          <button className='remove-action' onClick={this.removeAnswer}>Remover</button>
+          <button className='remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeAnswer();}}>Remover</button>
         </div>  
       );
     }
     else if (this.props.type.indexOf('question') >= 0){
       return (
         <div className='actions-wrapper'>
-          <button className='remove-action' onClick={this.removeQuestion}>Remover</button>
-          <button className='duplicate-action' onClick={this.duplicateQuestion}>Duplicar</button>
+          <button className='remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeAnswer();}}>Remover</button>
+          <button className='duplicate-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.duplicateQuestion();}}>Duplicar</button>
         </div>  
       );
     }
@@ -73,7 +73,6 @@ export default class DraggableComponent extends Component{
   duplicateQuestion = () => {
     let item = this.state.item;
     let createdQuestion = QuizStore.duplicateQuestion(item.id);
-    console.log(createdQuestion);    
     setTimeout(() => {
       this.focusDuplicatedQuestion(createdQuestion);
     }, 500);
@@ -116,14 +115,14 @@ export default class DraggableComponent extends Component{
               {...provided.draggableProps}
               className='rc-quiz-container'>
               <span {...provided.dragHandleProps} style={{ display: 'inline-block', margin: '0 10px', border: '1px solid #000'}}>Drag</span>
-              <EditorComponent placeholder={placeholder} content={item.text} className={customClassName} type={type} parentId={item.questionId} selfId={item.id} ></EditorComponent>
-              {this.createCheckbox()}
-              {this.createActions()}
+              <EditorComponent placeholder={placeholder} content={item.text} className={customClassName} type={type} parentId={item.questionId} id={item.id} ></EditorComponent>
               { item.answers && item.answers.length ? 
                 this.renderAnswers(item.answers, item.id)
                 :
                 ''
               }
+              {this.createCheckbox()}
+              {this.createActions()}
             </div>
             {provided.placeholder}
           </div>

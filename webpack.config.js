@@ -85,7 +85,7 @@ module.exports = {
     './index.js',
   output: {
     path: __dirname,
-    filename: 'dist/js/bundle.js'
+    filename: 'dist/js/quiz_bundle.js'
   },
   module: {
     rules: [

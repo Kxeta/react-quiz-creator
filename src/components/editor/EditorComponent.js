@@ -10,16 +10,15 @@ class EditorComponent extends Component {
     content: PropTypes.string, 
     formats: PropTypes.array, 
     modules: PropTypes.array, 
-    id: PropTypes.string,
+    id: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number
+    ]),
     className: PropTypes.string,
     placeholder: PropTypes.string,
     readOnly: PropTypes.bool,
     type: PropTypes.string,
     parentId: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]),
-    selfId: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
     ])
@@ -34,6 +33,11 @@ class EditorComponent extends Component {
 
   handleOnChange = (content, delta, source, editor) => {
     this.setState({ content })
+    QuizStore.updateContent(this.props.id, this.props.parentId, content);
+  }
+
+  handleOnBlur = () => {
+    QuizStore.updateContent(this.props.id, this.props.parentId, this.state.content);
   }
 
   componentWillMount(){
@@ -43,8 +47,7 @@ class EditorComponent extends Component {
   }
 
   onKeyEnterHandler = () => {
-    console.log('Enter!', this.props.parentId, this.props.selfId);
-    QuizStore.addAnswer(this.props.parentId || this.props.selfId);
+    QuizStore.addAnswer(this.props.parentId || this.props.id);
     this.focusNewAnser();
   }
 
@@ -85,6 +88,7 @@ class EditorComponent extends Component {
                   readOnly={ this.props.readOnly == true }
                   className={ classNames }
                   onChange={this.handleOnChange}
+                  onBlur={this.handleOnBlur}
                   bounds='#questionsContent'
                   >
       </ReactQuill>
