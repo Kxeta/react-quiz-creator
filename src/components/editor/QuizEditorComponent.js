@@ -5,7 +5,7 @@ import './EditorComponent.scss';
 import { QuizStore } from '../../modules';
 
 
-class EditorComponent extends Component {
+class QuizEditorComponent extends Component {
   static propTypes = { 
     content: PropTypes.string, 
     formats: PropTypes.array, 
@@ -33,11 +33,11 @@ class EditorComponent extends Component {
 
   handleOnChange = (content, delta, source, editor) => {
     this.setState({ content })
-    QuizStore.updateContent(this.props.id, this.props.parentId, content);
+    QuizStore.updateQuizContent(this.props.id, this.props.parentId, content);
   }
 
   handleOnBlur = () => {
-    QuizStore.updateContent(this.props.id, this.props.parentId, this.state.content);
+    QuizStore.updateQuizContent(this.props.id, this.props.parentId, this.state.content);
   }
 
   componentWillMount(){
@@ -96,4 +96,4 @@ class EditorComponent extends Component {
   }
 }
 
-export default EditorComponent;
+export default QuizEditorComponent;

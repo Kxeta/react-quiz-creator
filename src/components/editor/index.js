@@ -1,5 +1,5 @@
-import EditorComponent from './EditorComponent';
+import QuizEditorComponent from './QuizEditorComponent';
 
 export {
-  EditorComponent
+  QuizEditorComponent
 }

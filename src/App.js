@@ -23,7 +23,7 @@ export default class App extends Component {
     window.updateQuizStateJSON = this.updateQuizStateJSON;
     window.getQuizStateJSON = this.getQuizStateJSON;
     window.getQuizStateStringifiedJSON = this.getQuizStateStringifiedJSON;
-    // this.updateQuizStateJSON(this.getContentJSON());
+    this.updateQuizStateJSON(this.getContentJSON());
    }
 
   getQuizStateJSON = () =>{

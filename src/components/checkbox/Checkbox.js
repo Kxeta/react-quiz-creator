@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { QuizStore } from '../../modules';
 
 class Checkbox extends Component {
 
   static propTypes = {
     label: PropTypes.string.isRequired,
     handleCheckboxChange: PropTypes.func,
+    answerId: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.id
+    ]),
+    questionId: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.id
+    ])
   };
   
   constructor(props){
@@ -16,14 +25,33 @@ class Checkbox extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(JSON.stringify(this.state.isChecked) != JSON.stringify(nextProps.isChecked)){
+      this.setState({isChecked: nextProps.isChecked});
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    return (JSON.stringify(this.state.isChecked) != JSON.stringify(nextState.isChecked));
+  }
+
   toggleCheckboxChange = () => {
     const { handleCheckboxChange, label } = this.props;
-
-    this.setState(({ isChecked }) => (
-      {
-        isChecked: !isChecked,
+    let toggled = !this.state.isChecked;
+    if(toggled || !this.props.answerId){
+      this.setState(({ isChecked }) => (
+        {
+          isChecked: !isChecked,
+        }
+      ));
+      if(this.props.answerId){
+        QuizStore.updateCorrectAnswer(toggled, this.props.answerId, this.props.questionId);
       }
-    ));
+      else{
+        QuizStore.updateRequiredQuestion(toggled, this.props.questionId);
+      }
+    }
+    
 
     // handleCheckboxChange(label);
   }

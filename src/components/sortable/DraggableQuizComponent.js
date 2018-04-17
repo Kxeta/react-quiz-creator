@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import PropTypes from 'prop-types';
-import { EditorComponent, Checkbox } from '..';
+import { QuizEditorComponent, Checkbox } from '..';
 import DroppableComponent from './DroppableComponent';
 import { QuizStore } from '../../modules';
 import './SortableComponent.scss';
 
-export default class DraggableComponent extends Component{
+export default class DraggableQuizComponent extends Component{
   static propTypes = { 
     item: PropTypes.object,
     index: PropTypes.number,
@@ -32,10 +32,10 @@ export default class DraggableComponent extends Component{
   createCheckbox = () => {
     let item = this.state.item;
     if(this.props.type.indexOf('answer') >= 0){
-      return (<Checkbox label={'Correta'} isChecked={item.correct} className={`correct-answer-${item.questionId}`}/>);
+      return (<Checkbox label={'Correta'} isChecked={item.correct} className={`correct-answer-${item.questionId}`} questionId={item.questionId} answerId={item.id}/>);
     }
     else if (this.props.type.indexOf('question') >= 0){
-      return(<Checkbox label={'Obrigatória'} isChecked={item.required} className='required-question'/>)
+      return(<Checkbox label={'Obrigatória'} isChecked={item.required} className='required-question' questionId={item.id}/>)
     }
     return ;
   }
@@ -52,7 +52,7 @@ export default class DraggableComponent extends Component{
     else if (this.props.type.indexOf('question') >= 0){
       return (
         <div className='actions-wrapper'>
-          <button className='remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeAnswer();}}>Remover</button>
+          <button className='remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeQuestion();}}>Remover</button>
           <button className='duplicate-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.duplicateQuestion();}}>Duplicar</button>
         </div>  
       );
@@ -89,7 +89,8 @@ export default class DraggableComponent extends Component{
   }
 
   renderAnswers = (answers, questionKey) => {
-    return(<DroppableComponent key={`answer-${questionKey}`} type={`answer-${questionKey}`} items={answers} droppableId={`answer-droppable-${questionKey}`}/>)    
+    const componentFormat = this.props.type == 'profiles' ? 'profiles' : 'quiz'
+    return(<DroppableComponent componentFormat={componentFormat} key={`answer-${questionKey}`} type={`answer-${questionKey}`} items={answers} droppableId={`answer-droppable-${questionKey}`}/>)    
     // return false;
   }
 
@@ -115,7 +116,7 @@ export default class DraggableComponent extends Component{
               {...provided.draggableProps}
               className='rc-quiz-container'>
               <span {...provided.dragHandleProps} style={{ display: 'inline-block', margin: '0 10px', border: '1px solid #000'}}>Drag</span>
-              <EditorComponent placeholder={placeholder} content={item.text} className={customClassName} type={type} parentId={item.questionId} id={item.id} ></EditorComponent>
+              <QuizEditorComponent placeholder={placeholder} content={item.text} className={customClassName} type={type} parentId={item.questionId} id={item.id} ></QuizEditorComponent>
               { item.answers && item.answers.length ? 
                 this.renderAnswers(item.answers, item.id)
                 :

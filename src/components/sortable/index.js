@@ -1,9 +1,9 @@
 import DragDropComponent from './DragDropComponent';
 import DroppableComponent from './DroppableComponent';
-import DraggableComponent from './DraggableComponent';
+import DraggableQuizComponent from './DraggableQuizComponent';
 
 export {
   DragDropComponent,
   DroppableComponent,
-  DraggableComponent
+  DraggableQuizComponent
 }

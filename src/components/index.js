@@ -1,11 +1,11 @@
 import { Checkbox } from './checkbox';
-import { EditorComponent } from './editor';
-import { DragDropComponent, DroppableComponent, DraggableComponent } from './sortable';
+import { QuizEditorComponent } from './editor';
+import { DragDropComponent, DroppableComponent, DraggableQuizComponent } from './sortable';
 
 export {
   Checkbox,
-  EditorComponent,
+  QuizEditorComponent,
   DragDropComponent,
   DroppableComponent,
-  DraggableComponent
+  DraggableQuizComponent
 }

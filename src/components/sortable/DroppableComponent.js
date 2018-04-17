@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import { Droppable } from 'react-beautiful-dnd';
 import PropTypes from 'prop-types';
-import DraggableComponent from './DraggableComponent';
+import DraggableQuizComponent from './DraggableQuizComponent';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -21,6 +21,7 @@ export default class DroppableComponent extends Component{
     ]),
     type: PropTypes.string,
     droppableId: PropTypes.string,
+    componentFormat: PropTypes.string
   };
 
   constructor(props) {
@@ -49,9 +50,20 @@ export default class DroppableComponent extends Component{
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}>
-            {this.state.items.map((item, index) => (
-              <DraggableComponent type={ this.props.type } item={ item } index={ index }></DraggableComponent>
-            ))}
+            {this.state.items.map((item, index) => {
+              if(this.props.componentFormat == 'quiz'){
+                return(
+                  <DraggableQuizComponent type={ this.props.type } item={ item } index={ index }></DraggableQuizComponent>
+                )
+              }
+              else{
+                return(
+                  null
+                  // <DraggableQuizComponent type={ this.props.type } item={ item } index={ index }></DraggableQuizComponent>
+                )
+              }
+            }
+            )}
             {provided.placeholder}
           </div>
         )}
