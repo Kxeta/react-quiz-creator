@@ -27,18 +27,28 @@ class QuizStore {
   getJSONQuiz() {
     let quizJson = this.quiz;
     for(let i in quizJson){
-      quizJson[i].order = parseInt(i) + 1;
-      if(String(quizJson[i].id).indexOf('new-') > -1){
-        quizJson[i].id = null;
-      }
-      if(quizJson[i].answers.length){
-        for(let j in quizJson[i].answers){
-          quizJson[i].answers[j].order = parseInt(j) + 1;
-          if(String(quizJson[i].answers[j].id).indexOf('new-') > -1){
-            quizJson[i].answers[j].id = null;
-            quizJson[i].answers[j].questionId = quizJson[i].id;
+      if(quizJson[i].text.length){
+        quizJson[i].order = parseInt(i) + 1;
+        if(String(quizJson[i].id).indexOf('new-') > -1){
+          quizJson[i].id = null;
+        }
+        if(quizJson[i].answers.length){
+          for(let j in quizJson[i].answers){
+            if(quizJson[i].answers[j].text.length){
+              quizJson[i].answers[j].order = parseInt(j) + 1;
+              if(String(quizJson[i].answers[j].id).indexOf('new-') > -1){
+                quizJson[i].answers[j].id = null;
+                quizJson[i].answers[j].questionId = quizJson[i].id;
+              }
+            }
+            else{
+              quizJson[i].answers.splice(j,1);
+            }
           }
         }
+      }
+      else{
+        quizJson.splice(i,1);
       }
     }
     console.log(this.quiz,quizJson);
@@ -139,19 +149,28 @@ class QuizStore {
   //ADD actions
   @action
   addQuestion(quizId, prevQuestionId = 0){    
+    let newQuestionId = "new-" + Math.floor(Math.random()*100*Math.random()*5);
+    let newAnswer = { 
+      "id":"new-" + Math.floor(Math.random()*100*Math.random()*5),
+      "text": "",
+      "correct":true,
+      "order":null,
+      "questionId": newQuestionId
+    }
+
     let newQuestion = { 
-      "id": "new-" + Math.floor(Math.random()*100*Math.random()*5),
+      "id": newQuestionId,
       "text": "",
       "quizId": quizId,
       "order": null,
-      "answers": [],
+      "answers": [newAnswer],
       "required": false
     }
     let modQuiz = this.quiz;
     if (prevQuestionId) {
       let questionIndex = modQuiz.findIndex((item) => {return item.id === prevQuestionId});
       let result = Array.from(modQuiz);
-      result.splice(questionIndex, 0, newQuestion);
+      result.splice(questionIndex + 1, 0, newQuestion);
       modQuiz = result;
     }
     else{

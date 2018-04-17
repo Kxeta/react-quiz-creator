@@ -10,6 +10,7 @@ export default class DraggableQuizComponent extends Component{
   static propTypes = { 
     item: PropTypes.object,
     index: PropTypes.number,
+    lastItem: PropTypes.bool,
   };
 
   constructor(props) {
@@ -88,9 +89,9 @@ export default class DraggableQuizComponent extends Component{
     questionEl.querySelector('.ql-editor').focus();
   }
 
-  renderAnswers = (answers, questionKey) => {
+  renderAnswers = (answers, questionId) => {
     const componentFormat = this.props.type == 'profiles' ? 'profiles' : 'quiz'
-    return(<DroppableComponent componentFormat={componentFormat} key={`answer-${questionKey}`} type={`answer-${questionKey}`} items={answers} droppableId={`answer-droppable-${questionKey}`}/>)    
+    return(<DroppableComponent questionId={questionId} componentFormat={componentFormat} key={`answer-${questionId}`} type={`answer-${questionId}`} items={answers} droppableId={`answer-droppable-${questionId}`}/>)    
     // return false;
   }
 
@@ -99,6 +100,7 @@ export default class DraggableQuizComponent extends Component{
     const item = this.state.item;
     let customClassName = '';
     let placeholder = '';
+    let questionId = item.id
     if(type == 'question'){
       customClassName = `question-${item.id}`;
       placeholder = 'New Question';
@@ -106,11 +108,12 @@ export default class DraggableQuizComponent extends Component{
     else{
       customClassName = `question-${item.questionId} answer-${item.id}`;
       placeholder = 'New Answer';
+      questionId = item.questionId
     }
     return (
       <Draggable key={`${type}-${item.id}`} type={ type } draggableId={`${type}-${item.id}`} id={index} index={index}>
         {(provided, snapshot) => (
-          <div>
+          <div className={`draggable-${ type }`}>
             <div
               ref={provided.innerRef}
               {...provided.draggableProps}
@@ -120,15 +123,21 @@ export default class DraggableQuizComponent extends Component{
               { item.answers && item.answers.length ? 
                 this.renderAnswers(item.answers, item.id)
                 :
-                ''
+                <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addAnswer(questionId);}}>+ Adicionar nova resposta</button>
               }
               {this.createCheckbox()}
               {this.createActions()}
             </div>
             {provided.placeholder}
+            { (type == 'question')?
+              <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addQuestion(item.quizId, item.id);}}>+ Adicionar nova pergunta</button>
+              :
+              null
+            }
           </div>
         )}
       </Draggable>
+
     )
   }
 }

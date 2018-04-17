@@ -3,6 +3,7 @@ import { inject, observer } from 'mobx-react';
 import { Droppable } from 'react-beautiful-dnd';
 import PropTypes from 'prop-types';
 import DraggableQuizComponent from './DraggableQuizComponent';
+import { QuizStore } from '../../modules';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -21,7 +22,11 @@ export default class DroppableComponent extends Component{
     ]),
     type: PropTypes.string,
     droppableId: PropTypes.string,
-    componentFormat: PropTypes.string
+    componentFormat: PropTypes.string,
+    questionId: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string
+    ])
   };
 
   constructor(props) {
@@ -45,15 +50,21 @@ export default class DroppableComponent extends Component{
     if(!this.state.items){
       return null;
     }
+    let lastQuestionId = 0;
+    let quizId = 0;
+    if(this.state.items.length){
+      lastQuestionId = this.state.items[this.state.items.length - 1].id;
+      quizId = this.state.items[this.state.items.length - 1].quizId;
+    }
     return (
       <Droppable type={ this.props.type } droppableId={ this.props.droppableId } key={ this.props.droppableId }>
         {(provided, snapshot) => (
-          <div
+          <div 
             ref={provided.innerRef}>
             {this.state.items.map((item, index) => {
               if(this.props.componentFormat == 'quiz'){
                 return(
-                  <DraggableQuizComponent type={ this.props.type } item={ item } index={ index }></DraggableQuizComponent>
+                  <DraggableQuizComponent type={ this.props.type } item={ item } index={ index } lastItem={ (this.state.items.length-1) == index}></DraggableQuizComponent>
                 )
               }
               else{
@@ -65,6 +76,16 @@ export default class DroppableComponent extends Component{
             }
             )}
             {provided.placeholder}
+            {
+              this.props.componentFormat == 'quiz' ? 
+                  this.props.type == 'question' ?
+                    <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addQuestion(quizId, lastQuestionId);}}>+ Adicionar nova pergunta</button>
+                    :
+                    <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addAnswer(this.props.questionId);}}>+ Adicionar nova resposta</button>
+                :
+                null
+                // <DraggableQuizComponent type={ this.props.type } item={ item } index={ index }></DraggableQuizComponent>
+            }
           </div>
         )}
       </Droppable>
