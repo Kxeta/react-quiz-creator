@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Provider } from 'mobx-react';
 import './styles/main.scss';
-import { DragDropComponent } from './components';
+import { DragDropComponent, ImageUploader } from './components';
 import { QuizStore } from './modules';
 
 
@@ -21,18 +21,11 @@ export default class App extends Component {
 
   componentDidMount() {
     window.updateQuizStateJSON = this.updateQuizStateJSON;
+
     window.getQuizStateJSON = this.getQuizStateJSON;
     window.getQuizStateStringifiedJSON = this.getQuizStateStringifiedJSON;
     this.updateQuizStateJSON(this.getContentJSON());
    }
-
-  getQuizStateJSON = () =>{
-    return QuizStore.getJSONQuiz();
-  }
-
-  getQuizStateStringifiedJSON = () =>{
-    return QuizStore.getStringfiedJSONQuiz();
-  }
  
   updateQuizStateJSON = (items) => {
     QuizStore.quiz = items;

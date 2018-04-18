@@ -66,10 +66,17 @@ export default class DragDropComponent extends Component{
   }
 
   render() {
-    const componentFormat = this.props.type == 'profiles' ? 'profiles' : 'quiz'
+    const componentFormat = this.props.type == 'profiles' ? 'profiles' : 'quiz';
+    let items = [];
+    if(componentFormat == 'profiles'){
+      items = this.props.QuizStore.profiles;
+    }
+    else{
+      items = this.props.QuizStore.quiz;
+    }
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        <DroppableComponent type={ this.props.type } componentFormat={componentFormat} items={this.props.QuizStore.quiz} droppableId={ this.props.droppableId }>
+        <DroppableComponent type={ this.props.type } componentFormat={componentFormat} items={items} droppableId={ this.props.droppableId }>
         </DroppableComponent>
       </DragDropContext>
     );

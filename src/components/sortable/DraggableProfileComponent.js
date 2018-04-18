@@ -1,0 +1,91 @@
+import React, { Component } from 'react';
+import { Draggable } from 'react-beautiful-dnd';
+import PropTypes from 'prop-types';
+import { QuizEditorComponent, Checkbox } from '..';
+import DroppableComponent from './DroppableComponent';
+import { QuizStore } from '../../modules';
+import './SortableComponent.scss';
+
+export default class DraggableProfileComponent extends Component{
+  static propTypes = { 
+    item: PropTypes.object,
+    index: PropTypes.number
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      item: this.props.item
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(JSON.stringify(this.state.item) != JSON.stringify(nextProps.item)){
+      this.setState({item: nextProps.item});
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    return (JSON.stringify(this.state.item) != JSON.stringify(nextState.item));
+  }
+
+  createActions = () => {
+    let item = this.state.item;
+    return (
+      <div className='actions-wrapper'>
+        <button className='remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeProfile();}}>Remover</button>
+        <button className='duplicate-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.duplicateProfile();}}>Duplicar</button>
+      </div>  
+    );
+  }
+
+  removeProfile = () => {
+    let item = this.state.item;
+    QuizStore.removeProfile(item.id);
+  }
+
+  duplicateProfile = () => {
+    let item = this.state.item;
+    let createdProfile = QuizStore.duplicateProfile(item.id);
+    setTimeout(() => {
+      this.focusDuplicatedProfile(createdProfile);
+    }, 500);
+  }
+
+  focusDuplicatedProfile = (id) => {
+    let profileEl = document.querySelector(`.profile-${id}`)
+    let offset = profileEl.offsetTop - (profileEl.scrollTop || document.documentElement.scrollTop) + profileEl.clientTop
+    window.scrollTo(
+      document.querySelector(`.profile-${id}`).offset,
+      1000
+    );
+    profileEl.querySelector('.ql-editor').focus();
+  }
+
+  render() {
+    const { index, type } = this.props;
+    const item = this.state.item;
+    let profileId = item.id
+    let customClassName = `profile-${item.id}`;
+    let titlePlaceholder = 'New Profile';
+    let descriptionPlaceholder = 'New Profile Text';
+    return (
+      <Draggable key={`${type}-${item.id}`} type={ type } draggableId={`${type}-${item.id}`} id={index} index={index}>
+        {(provided, snapshot) => (
+          <div className={`draggable-${ type }`}>
+            <div
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              className='rc-quiz-container'>
+              <span {...provided.dragHandleProps} style={{ display: 'inline-block', margin: '0 10px', border: '1px solid #000'}}>Drag</span>
+              <QuizEditorComponent placeholder={placeholder} content={item.text} className={customClassName} type={type} parentId={item.profileId} id={item.id} ></QuizEditorComponent>
+              {this.createActions()}
+            </div>
+            {provided.placeholder}
+          </div>
+        )}
+      </Draggable>
+
+    )
+  }
+}
