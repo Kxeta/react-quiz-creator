@@ -63,6 +63,16 @@ export default class DragDropComponent extends Component{
         return;
       }
     }
+    else if(result.type.indexOf('profiles') >= 0){
+      const destination = result.destination.index;
+      const begin = result.source.index;
+      let items = [...this.props.QuizStore.profiles];
+      items = reorder(items, begin, destination)
+      QuizStore.profiles = items;
+    }
+    else{
+      return;
+    }
   }
 
   render() {
@@ -70,6 +80,7 @@ export default class DragDropComponent extends Component{
     let items = [];
     if(componentFormat == 'profiles'){
       items = this.props.QuizStore.profiles;
+      window.minQuizAnswers = this.props.QuizStore.profiles.length
     }
     else{
       items = this.props.QuizStore.quiz;

@@ -83,6 +83,7 @@ class QuizStore {
         profilesJson[i].id = null;
       }
     }
+    console.log(this.profiles,profilesJson);
     return profilesJson;
   }
 
@@ -119,6 +120,22 @@ class QuizStore {
       }
     }
     this.quiz = modifiedQuiz;
+  }
+
+  @action
+  updateProfileContent(id, type, content){
+    let modProfiles = this.profiles;
+    let profileIndex = -1;
+    profileIndex = modProfiles.findIndex((item) => {return item.id === id});
+    if(profileIndex > -1){
+      if(type == 'title'){
+        modProfiles[profileIndex].title = content;
+      }
+      if(type == 'description'){
+        modProfiles[profileIndex].text = content;
+      }
+    }
+    this.profiles = modProfiles;
   }
   
   //Update Element's Correct Answer on the Store
@@ -264,6 +281,33 @@ class QuizStore {
     
     this.quiz = modQuiz;
     return questionCopy.id;
+  }
+
+  @action
+  duplicateProfile(id){
+    let modProfiles = this.profiles;
+    let profileIndex = modProfiles.findIndex((item) => {return item.id === id});
+    const profileId = "new-" + Math.floor((Math.random() + 1)*100*Math.random()*5);
+    let profileCopy = { 
+      "id": profileId,
+      "title": modProfiles[profileIndex].title,
+      "text": modProfiles[profileIndex].text,
+      "quizId": modProfiles[profileIndex].quizId,
+      "order": null,
+      "badge": {
+        "url": modProfiles[profileIndex].badge.url,
+        "name": modProfiles[profileIndex].badge.name, 
+        "type": modProfiles[profileIndex].badge.type,
+        "size": modProfiles[profileIndex].badge.size,
+        "data": modProfiles[profileIndex].badge.data
+      },
+      "pageCode": modProfiles[profileIndex].pageCode,
+      "moduleId": modProfiles[profileIndex].moduleId
+    };
+    modProfiles.splice(profileIndex + 1, 0, profileCopy);
+    
+    this.profiles = modProfiles;
+    return profileCopy.id;
   }
 
   @action

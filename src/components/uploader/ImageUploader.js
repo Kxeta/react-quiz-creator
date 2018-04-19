@@ -44,7 +44,7 @@ export default class ImageUploader extends Component {
     if (imageBase64) {
       $imagePreview = (<img src={imageBase64} />);
     } else {
-      $imagePreview = (<div className="previewText">Please select an Image for Preview</div>);
+      $imagePreview = (<div></div>);
     }
 
     return (

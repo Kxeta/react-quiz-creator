@@ -14,6 +14,10 @@ class ProfileEditorComponent extends Component {
       PropTypes.string,
       PropTypes.number
     ]),
+    profileId: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number
+    ]),
     className: PropTypes.string,
     placeholder: PropTypes.string,
     readOnly: PropTypes.bool,
@@ -29,11 +33,11 @@ class ProfileEditorComponent extends Component {
 
   handleOnChange = (content, delta, source, editor) => {
     this.setState({ content })
-    // QuizStore.updateProfileContent(this.props.id, this.props.type, content);
+    QuizStore.updateProfileContent(this.props.profileId, this.props.type, content);
   }
 
   handleOnBlur = () => {
-    // QuizStore.updateProfileContent(this.props.id, this.props.type, this.state.content);
+    QuizStore.updateProfileContent(this.props.profileId, this.props.type, this.state.content);
   }
 
   componentWillMount(){

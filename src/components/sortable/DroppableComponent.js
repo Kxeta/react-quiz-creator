@@ -50,10 +50,10 @@ export default class DroppableComponent extends Component{
     if(!this.state.items){
       return null;
     }
-    let lastQuestionId = 0;
+    let lastItemId = 0;
     let quizId = 0;
     if(this.state.items.length){
-      lastQuestionId = this.state.items[this.state.items.length - 1].id;
+      lastItemId = this.state.items[this.state.items.length - 1].id;
       quizId = this.state.items[this.state.items.length - 1].quizId;
     }
     return (
@@ -78,12 +78,11 @@ export default class DroppableComponent extends Component{
             {
               this.props.componentFormat == 'quiz' ? 
                   this.props.type == 'question' ?
-                    <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addQuestion(quizId, lastQuestionId);}}>+ Adicionar nova pergunta</button>
+                    <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addQuestion(quizId, lastItemId);}}>+ Adicionar nova pergunta</button>
                     :
                     <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addAnswer(this.props.questionId);}}>+ Adicionar nova resposta</button>
                 :
-                null
-                // <DraggableQuizComponent type={ this.props.type } item={ item } index={ index }></DraggableQuizComponent>
+                <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addProfile(quizId, lastItemId);}}>+ Adicionar novo perfil</button>
             }
           </div>
         )}
