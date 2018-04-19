@@ -121,22 +121,6 @@ class QuizStore {
     }
     this.quiz = modifiedQuiz;
   }
-
-  @action
-  updateProfileContent(id, type, content){
-    let modProfiles = this.profiles;
-    let profileIndex = -1;
-    profileIndex = modProfiles.findIndex((item) => {return item.id === id});
-    if(profileIndex > -1){
-      if(type == 'title'){
-        modProfiles[profileIndex].title = content;
-      }
-      if(type == 'description'){
-        modProfiles[profileIndex].text = content;
-      }
-    }
-    this.profiles = modProfiles;
-  }
   
   //Update Element's Correct Answer on the Store
   @action
@@ -161,6 +145,41 @@ class QuizStore {
     let questionIndex = modQuiz.findIndex((item) => {return item.id === questionId});
     modQuiz[questionIndex].required = required
     this.quiz = modQuiz;
+  }
+
+
+  @action
+  updateProfileContent(id, type, content){
+    let modProfiles = this.profiles;
+    let profileIndex = -1;
+    profileIndex = modProfiles.findIndex((item) => {return item.id === id});
+    if(profileIndex > -1){
+      if(type == 'title'){
+        modProfiles[profileIndex].title = content;
+      }
+      if(type == 'description'){
+        modProfiles[profileIndex].text = content;
+      }
+    }
+    this.profiles = modProfiles;
+  }
+
+  @action
+  updateProfileBadge(id, file, base64){
+    let modProfiles = this.profiles;
+    let strippedBase64 = base64.split(',')[1];
+    let profileIndex = -1;
+    profileIndex = modProfiles.findIndex((item) => {return item.id === id});
+    if(profileIndex > -1){
+      modProfiles[profileIndex].badge.url = null;
+      modProfiles[profileIndex].badge.mediaUpload = {
+        "fileName": file.name,
+        "type": file.type,
+        "size": file.size,
+        "data": strippedBase64
+      };
+    }
+    this.profiles = modProfiles;
   }
   
   //ADD actions

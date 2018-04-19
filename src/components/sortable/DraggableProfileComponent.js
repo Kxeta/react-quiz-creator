@@ -61,6 +61,10 @@ export default class DraggableProfileComponent extends Component{
     profileEl.querySelector('.ql-editor').focus();
   }
 
+  onBadgeChange = (file, base64) => {
+    QuizStore.updateProfileBadge(this.state.item.id, file, base64);
+  }
+
   render() {
     const { index, type } = this.props;
     const item = this.state.item;
@@ -79,7 +83,7 @@ export default class DraggableProfileComponent extends Component{
               <span {...provided.dragHandleProps} style={{ display: 'inline-block', margin: '0 10px', border: '1px solid #000'}}>Drag</span>
               <ProfileEditorComponent placeholder={titlePlaceholder} content={item.title} profileId={item.id} className={customClassName} type='title' id={item.id} ></ProfileEditorComponent>
               <ProfileEditorComponent placeholder={descriptionPlaceholder} content={item.text} profileId={item.id} className={customClassName} type='description' id={`${item.id}-description`} ></ProfileEditorComponent>
-              <ImageUploader></ImageUploader>
+              <ImageUploader onChange={this.onBadgeChange} badge={item.badge}></ImageUploader>
               {this.createActions()}
             </div>
             {provided.placeholder}

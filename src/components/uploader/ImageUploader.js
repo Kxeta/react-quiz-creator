@@ -3,6 +3,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default class ImageUploader extends Component {
+  static propTypes = { 
+    onChange: PropTypes.func,
+    badge: PropTypes.object
+  };
+
   constructor(props) {
     super(props);
     this.state = {file: '',imageBase64: ''};
@@ -28,6 +33,7 @@ export default class ImageUploader extends Component {
           file: file,
           imageBase64: reader.result,
         });
+        this.props.onChange(file, reader.result);
         console.log(reader.result);
       }
   
@@ -37,6 +43,32 @@ export default class ImageUploader extends Component {
       alert('Arquivo muito grande!')
     }
   }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    let url='';
+    if(nextProps.badge.mediaUpload.data){
+      url = `data:${nextProps.badge.mediaUpload.type};base64,${nextProps.badge.mediaUpload.data}`
+    }
+    else{
+      url = nextProps.badge.url;
+    }
+    console.log(url)
+    if(this.state.imageBase64 != url){
+      this.setState({imageBase64: url});
+    }
+  }
+
+  // shouldComponentUpdate(nextProps, nextState){
+  //   let url='';
+  //   if(nextProps.badge.mediaUpload.data){
+  //     url = `data:${nextProps.badge.mediaUpload.type};base64,${nextProps.badge.mediaUpload.data}`
+  //   }
+  //   else{
+  //     url = nextProps.badge.url;
+  //   }
+  //   return (this.state.imageBase64 != url);
+  // }
 
   render() {
     let {imageBase64} = this.state;
