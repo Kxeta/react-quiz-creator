@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import PropTypes from 'prop-types';
-import { QuizEditorComponent, Checkbox } from '..';
-import DroppableComponent from './DroppableComponent';
+import { ProfileEditorComponent, ImageUploader } from '..';
 import { QuizStore } from '../../modules';
 import './SortableComponent.scss';
 
@@ -78,7 +77,9 @@ export default class DraggableProfileComponent extends Component{
               {...provided.draggableProps}
               className='rc-quiz-container'>
               <span {...provided.dragHandleProps} style={{ display: 'inline-block', margin: '0 10px', border: '1px solid #000'}}>Drag</span>
-              <QuizEditorComponent placeholder={placeholder} content={item.text} className={customClassName} type={type} parentId={item.profileId} id={item.id} ></QuizEditorComponent>
+              <ProfileEditorComponent placeholder={titlePlaceholder} content={item.title} className={customClassName} type={type} parentId={item.profileId} id={item.id} ></ProfileEditorComponent>
+              <ProfileEditorComponent placeholder={descriptionPlaceholder} content={item.text} className={customClassName} type={type} parentId={item.profileId} id={`${item.id}-description`} ></ProfileEditorComponent>
+              <ImageUploader></ImageUploader>
               {this.createActions()}
             </div>
             {provided.placeholder}

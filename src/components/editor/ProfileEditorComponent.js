@@ -17,11 +17,7 @@ class ProfileEditorComponent extends Component {
     className: PropTypes.string,
     placeholder: PropTypes.string,
     readOnly: PropTypes.bool,
-    type: PropTypes.string,
-    parentId: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ])
+    type: PropTypes.string
   };
 
   constructor(props){
@@ -33,11 +29,11 @@ class ProfileEditorComponent extends Component {
 
   handleOnChange = (content, delta, source, editor) => {
     this.setState({ content })
-    QuizStore.updateProfileContent(this.props.id, this.props.type, content);
+    // QuizStore.updateProfileContent(this.props.id, this.props.type, content);
   }
 
   handleOnBlur = () => {
-    QuizStore.updateProfileContent(this.props.id, this.props.type, this.state.content);
+    // QuizStore.updateProfileContent(this.props.id, this.props.type, this.state.content);
   }
 
   componentWillMount(){
@@ -45,19 +41,6 @@ class ProfileEditorComponent extends Component {
       content : this.props.content
     })
   }
-
-  onKeyEnterHandler = () => {
-    QuizStore.addAnswer(this.props.parentId || this.props.id);
-    this.focusNewAnser();
-  }
-
-  focusNewAnser = () =>{
-    const questionClass = document.activeElement.parentNode.parentNode.classList[1];
-    let allEl = document.querySelectorAll(`.${questionClass}`);
-    let lastEl = allEl[allEl.length - 1]
-    lastEl.querySelector('.ql-editor').focus();
-  }
-
 
   render() {
     let formats = this.props.formats || [
@@ -70,10 +53,6 @@ class ProfileEditorComponent extends Component {
       keyboard: {
         bindings: {
           tab: 'disabled',
-          enter: {
-            key: 13,
-            handler: this.onKeyEnterHandler
-          }
         }
       }
     };

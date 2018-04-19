@@ -56,7 +56,7 @@ export default class App2 extends Component {
   render () {
     return (
       <Provider QuizStore = { QuizStore }>
-        <DragDropComponent type='profiles' items={ QuizStore } callbackUpdate={this.updateQuizStateJSON} droppableId='profile-droppable'/>
+        <DragDropComponent type='profiles' items={ QuizStore } droppableId='profiles-droppable'/>
       </Provider>
     );
   }

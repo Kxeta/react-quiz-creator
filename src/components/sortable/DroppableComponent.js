@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import { Droppable } from 'react-beautiful-dnd';
 import PropTypes from 'prop-types';
-import DraggableQuizComponent from './DraggableQuizComponent';
+import DraggableProfileComponent from './DraggableProfileComponent';
 import { QuizStore } from '../../modules';
 
 const reorder = (list, startIndex, endIndex) => {
@@ -69,8 +69,7 @@ export default class DroppableComponent extends Component{
               }
               else{
                 return(
-                  null
-                  // <DraggableQuizComponent type={ this.props.type } item={ item } index={ index }></DraggableQuizComponent>
+                  <DraggableProfileComponent type={ this.props.componentFormat } item={ item } index={ index }></DraggableProfileComponent>
                 )
               }
             }

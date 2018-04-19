@@ -95,7 +95,7 @@ export default class App extends Component {
     return (
       <Provider QuizStore = { QuizStore }>
         <div>
-          <DragDropComponent type='question' items={ QuizStore } callbackUpdate={this.updateQuizStateJSON} droppableId='question-droppable'/>
+          <DragDropComponent type='question' items={ QuizStore } droppableId='question-droppable'/>
           <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.getJSONQuiz(); } }>Get Json!</button>
         </div>
       </Provider>

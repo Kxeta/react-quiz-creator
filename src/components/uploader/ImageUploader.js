@@ -28,6 +28,7 @@ export default class ImageUploader extends Component {
           file: file,
           imageBase64: reader.result,
         });
+        console.log(reader.result);
       }
   
       reader.readAsDataURL(file)
