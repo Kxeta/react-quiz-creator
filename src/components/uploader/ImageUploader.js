@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 export default class ImageUploader extends Component {
@@ -16,16 +16,30 @@ export default class ImageUploader extends Component {
   _handleSubmit(e) {
     e.preventDefault();
     // TODO: do something with -> this.state.file
-    console.log('handle uploading-', { "file": this.state.file });
+  }
+  _handleRemoveImage(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.refs.imageForm.reset();
+    this.setState({
+      file: '',
+      imageBase64: ''
+    });
+    this.props.onChange(null, null);
+  }
+
+  _handleChangeImage(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.refs.imageController.click();
   }
 
   _handleImageChange(e) {
     e.preventDefault();
+    e.stopPropagation();
     const MaxFileSize = this.props.maxFileSize || (1024*1024*2) // 2MB 
     let reader = new FileReader();
     let file = e.target.files[0];
-
-    console.log(file);
 
     if(file.size < MaxFileSize){
       reader.onloadend = () => {
@@ -34,7 +48,6 @@ export default class ImageUploader extends Component {
           imageBase64: reader.result,
         });
         this.props.onChange(file, reader.result);
-        console.log(reader.result);
       }
   
       reader.readAsDataURL(file)
@@ -45,15 +58,13 @@ export default class ImageUploader extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     let url='';
-    if(nextProps.badge.mediaUpload.data){
+    if(nextProps.badge.mediaUpload && nextProps.badge.mediaUpload.data){
       url = `data:${nextProps.badge.mediaUpload.type};base64,${nextProps.badge.mediaUpload.data}`
     }
     else{
       url = nextProps.badge.url;
     }
-    console.log(url)
     if(this.state.imageBase64 != url){
       this.setState({imageBase64: url});
     }
@@ -74,25 +85,33 @@ export default class ImageUploader extends Component {
     let {imageBase64} = this.state;
     let $imagePreview = null;
     if (imageBase64) {
-      $imagePreview = (<img src={imageBase64} />);
+      $imagePreview = (
+      <Fragment>
+        <img src={imageBase64} />
+        <button onClick={(e)=>this._handleRemoveImage(e)}>Remover</button>
+        <button onClick={(e)=>this._handleChangeImage(e)}>Trocar</button>
+      </Fragment>
+    );
     } else {
       $imagePreview = (<div></div>);
     }
 
     return (
       <div className="previewComponent">
-        <form onSubmit={(e)=>this._handleSubmit(e)}>
-          <input className="fileInput" 
-            type="file" 
-            accept="image/*"
-            onChange={(e)=>this._handleImageChange(e)} />
-          <button className="submitButton" 
-            type="submit" 
-            onClick={(e)=>this._handleSubmit(e)}>Upload Image</button>
+        <form ref="imageForm" onSubmit={(e)=>this._handleSubmit(e)}>
+          <label ref="imageController">
+            <input className="fileInput" 
+              type="file" 
+              accept="image/*"
+              onChange={(e)=>this._handleImageChange(e)}
+              name="imageSubmitter" 
+              ref="imageInput"
+              />
+            <div className="imgPreview">
+              {$imagePreview}
+            </div>
+          </label>
         </form>
-        <div className="imgPreview">
-          {$imagePreview}
-        </div>
       </div>
     )
   }

@@ -81,8 +81,8 @@ export default class DraggableProfileComponent extends Component{
               {...provided.draggableProps}
               className='rc-quiz-container'>
               <span {...provided.dragHandleProps} style={{ display: 'inline-block', margin: '0 10px', border: '1px solid #000'}}>Drag</span>
-              <ProfileEditorComponent placeholder={titlePlaceholder} content={item.title} profileId={item.id} className={customClassName} type='title' id={item.id} ></ProfileEditorComponent>
-              <ProfileEditorComponent placeholder={descriptionPlaceholder} content={item.text} profileId={item.id} className={customClassName} type='description' id={`${item.id}-description`} ></ProfileEditorComponent>
+              <ProfileEditorComponent placeholder={titlePlaceholder} content={item.name} profileId={item.id} className={customClassName} type='title' id={item.id} ></ProfileEditorComponent>
+              <ProfileEditorComponent placeholder={descriptionPlaceholder} content={item.description} profileId={item.id} className={customClassName} type='description' id={`${item.id}-description`} ></ProfileEditorComponent>
               <ImageUploader onChange={this.onBadgeChange} badge={item.badge}></ImageUploader>
               {this.createActions()}
             </div>

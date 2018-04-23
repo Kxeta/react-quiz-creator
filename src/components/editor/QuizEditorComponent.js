@@ -90,6 +90,7 @@ class QuizEditorComponent extends Component {
                   onChange={this.handleOnChange}
                   onBlur={this.handleOnBlur}
                   bounds='#questionsContent'
+                  name={this.props.id + '-' + this.props.parentId}
                   >
       </ReactQuill>
     )

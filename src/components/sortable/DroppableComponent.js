@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import { Droppable } from 'react-beautiful-dnd';
 import PropTypes from 'prop-types';
+import DraggableQuizComponent from './DraggableQuizComponent';
 import DraggableProfileComponent from './DraggableProfileComponent';
 import { QuizStore } from '../../modules';
 
@@ -50,8 +51,8 @@ export default class DroppableComponent extends Component{
     if(!this.state.items){
       return null;
     }
-    let lastItemId = 0;
-    let quizId = 0;
+    let lastItemId = -1;
+    let quizId = null;
     if(this.state.items.length){
       lastItemId = this.state.items[this.state.items.length - 1].id;
       quizId = this.state.items[this.state.items.length - 1].quizId;
@@ -82,7 +83,7 @@ export default class DroppableComponent extends Component{
                     :
                     <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addAnswer(this.props.questionId);}}>+ Adicionar nova resposta</button>
                 :
-                <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addProfile(quizId, lastItemId);}}>+ Adicionar novo perfil</button>
+                <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addProfile(quizId);}}>+ Adicionar novo perfil</button>
             }
           </div>
         )}

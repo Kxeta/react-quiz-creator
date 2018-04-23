@@ -6,7 +6,7 @@ import { QuizStore } from './modules';
 
 
 
-export default class App extends Component {
+export default class Questions extends Component {
 
   constructor(props){
     super(props);
@@ -22,10 +22,18 @@ export default class App extends Component {
   componentDidMount() {
     window.updateQuizStateJSON = this.updateQuizStateJSON;
 
-    window.getQuizStateJSON = this.getQuizStateJSON;
-    window.getQuizStateStringifiedJSON = this.getQuizStateStringifiedJSON;
-    this.updateQuizStateJSON(this.getContentJSON());
+    window.getQuizStateJSON = this.getJSONQuiz;
+    window.getQuizStateStringifiedJSON = this.getStringfiedJSONQuiz;
+    // this.updateQuizStateJSON(this.getContentJSON());
    }
+
+  getQuizStateJSON = () =>{
+    return QuizStore.getJSONQuiz();
+  }
+
+  getStringfiedJSONQuiz = () =>{
+    return QuizStore.getStringfiedJSONQuiz();
+  }
  
   updateQuizStateJSON = (items) => {
     QuizStore.quiz = items;

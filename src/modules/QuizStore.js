@@ -83,7 +83,6 @@ class QuizStore {
         profilesJson[i].id = null;
       }
     }
-    console.log(this.profiles,profilesJson);
     return profilesJson;
   }
 
@@ -155,10 +154,10 @@ class QuizStore {
     profileIndex = modProfiles.findIndex((item) => {return item.id === id});
     if(profileIndex > -1){
       if(type == 'title'){
-        modProfiles[profileIndex].title = content;
+        modProfiles[profileIndex].name = content;
       }
       if(type == 'description'){
-        modProfiles[profileIndex].text = content;
+        modProfiles[profileIndex].description = content;
       }
     }
     this.profiles = modProfiles;
@@ -167,15 +166,15 @@ class QuizStore {
   @action
   updateProfileBadge(id, file, base64){
     let modProfiles = this.profiles;
-    let strippedBase64 = base64.split(',')[1];
+    let strippedBase64 = (base64 && base64.split(',')[1]) || null;
     let profileIndex = -1;
     profileIndex = modProfiles.findIndex((item) => {return item.id === id});
     if(profileIndex > -1){
       modProfiles[profileIndex].badge.url = null;
       modProfiles[profileIndex].badge.mediaUpload = {
-        "fileName": file.name,
-        "type": file.type,
-        "size": file.size,
+        "fileName": file ? file.name : null,
+        "type": file ? file.type : null,
+        "size": file ? file.size : null,
         "data": strippedBase64
       };
     }
@@ -232,13 +231,24 @@ class QuizStore {
   }
 
   @action
-  addProfile(quizId){    
+  addProfile(quizId){
     let newProfile = { 
       "id": "new-" + Math.floor(Math.random()*100*Math.random()*5),
-      "title": "",
-      "text": "",
+      "name": "",
+      "description": "",
       "quizId": quizId,
-      "order": null
+      "order": null,
+      "badge": {
+        "url": null,
+        "mediaUpload": {
+            "fileName": null,
+            "type": null,
+            "size": null,
+            "data": null
+        }
+      },
+      "pageCode": null,
+      "moduleId": null
     }
     let modProfiles = this.profiles;
     modProfiles.push(newProfile);
@@ -309,17 +319,11 @@ class QuizStore {
     const profileId = "new-" + Math.floor((Math.random() + 1)*100*Math.random()*5);
     let profileCopy = { 
       "id": profileId,
-      "title": modProfiles[profileIndex].title,
-      "text": modProfiles[profileIndex].text,
+      "name": modProfiles[profileIndex].name,
+      "description": modProfiles[profileIndex].description,
       "quizId": modProfiles[profileIndex].quizId,
       "order": null,
-      "badge": {
-        "url": modProfiles[profileIndex].badge.url,
-        "name": modProfiles[profileIndex].badge.name, 
-        "type": modProfiles[profileIndex].badge.type,
-        "size": modProfiles[profileIndex].badge.size,
-        "data": modProfiles[profileIndex].badge.data
-      },
+      "badge": modProfiles[profileIndex].badge,
       "pageCode": modProfiles[profileIndex].pageCode,
       "moduleId": modProfiles[profileIndex].moduleId
     };
