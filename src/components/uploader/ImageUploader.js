@@ -5,12 +5,20 @@ import PropTypes from 'prop-types';
 export default class ImageUploader extends Component {
   static propTypes = { 
     onChange: PropTypes.func,
-    badge: PropTypes.object
+    badge: PropTypes.object,
+    labels: PropTypes.oneOfType([
+      PropTypes.array,
+      PropTypes.object
+    ]),
   };
 
   constructor(props) {
     super(props);
-    this.state = {file: '',imageBase64: ''};
+    this.state = {
+      file: '',
+      imageBase64: '',
+      labels: this.props.labels
+    };
   }
 
   _handleSubmit(e) {
@@ -58,6 +66,12 @@ export default class ImageUploader extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if(JSON.stringify(this.state.labels) != JSON.stringify(nextProps.labels)){
+      this.setState({labels: nextProps.labels});
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
     let url='';
     if(nextProps.badge.mediaUpload && nextProps.badge.mediaUpload.data){
       url = `data:${nextProps.badge.mediaUpload.type};base64,${nextProps.badge.mediaUpload.data}`
@@ -88,8 +102,8 @@ export default class ImageUploader extends Component {
       $imagePreview = (
       <Fragment>
         <img src={imageBase64} />
-        <button onClick={(e)=>this._handleRemoveImage(e)}>Remover</button>
-        <button onClick={(e)=>this._handleChangeImage(e)}>Trocar</button>
+        <button onClick={(e)=>this._handleRemoveImage(e)}>{this.state.labels["general.remove"]}</button>
+        <button onClick={(e)=>this._handleChangeImage(e)}>{this.state.labels["general.change"]}</button>
       </Fragment>
     );
     } else {

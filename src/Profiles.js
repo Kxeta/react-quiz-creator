@@ -11,19 +11,23 @@ export default class Profiles extends Component {
   constructor(props){
     super(props);
     this.state = {
-      items: []
+      items: [],
+      labels: {}
     }
     if(window){
       window.updateProfilesStateJSON = this.updateProfilesStateJSON;
+      window.updateLabels = this.updateLabels;
     }
   }
 
   componentDidMount() {
     window.updateProfilesStateJSON = this.updateProfilesStateJSON;
+    window.updateLabels = this.updateLabels;
 
     window.getJSONProfiles = this.getJSONProfiles;
     window.getStringfiedJSONProfiles = this.getStringfiedJSONProfiles;
     // this.updateProfilesStateJSON(this.getContentProfilesJSON());
+    this.updateLabels(this.getLabelsJSON());
    }
 
   updateProfilesStateJSON = (items) => {
@@ -36,6 +40,30 @@ export default class Profiles extends Component {
 
   getStringfiedJSONProfiles = () =>{
     return QuizStore.getStringfiedJSONProfiles();
+  }
+
+  updateLabels = (labels) => {
+    this.setState({
+      labels
+    });
+  }
+
+  getLabelsJSON = () => {
+    const json = {
+      "pages.quiz.add_new_question": "Adicionar nova pergunta",
+      "pages.quiz.new_question": "Nova pergunta",
+      "pages.quiz.add_new_answer": "Adicionar nova resposta",
+      "pages.quiz.new_answer": "Nova resposta",
+      "pages.quiz.add_new_profile": "Adicionar nova perfil",
+      "pages.quiz.new_profile": "Novo perfil",
+      "pages.quiz.new_description_profile": "Descrição do perfil",
+      "pages.quiz.correct_answer": "Resposta correta",
+      "general.mandatory": "Obrigatória",
+      "general.remove": "Remover",
+      "general.duplicate": "Duplicar",
+      "general.change": "Trocar",
+    }
+    return json;
   }
   
   getContentProfilesJSON = () => {
@@ -84,7 +112,7 @@ export default class Profiles extends Component {
     return (
         <Provider QuizStore = { QuizStore }>
           <div>
-            <DragDropComponent type='profiles' items={ QuizStore } droppableId='profiles-droppable'/>
+            <DragDropComponent labels={this.state.labels} type='profiles' items={ QuizStore } droppableId='profiles-droppable'/>
             <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.getJSONProfiles(); } }>Get Json!</button>
           </div>
       </Provider>

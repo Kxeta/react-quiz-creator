@@ -21,6 +21,10 @@ export default class DroppableComponent extends Component{
       PropTypes.array,
       PropTypes.object
     ]),
+    labels: PropTypes.oneOfType([
+      PropTypes.array,
+      PropTypes.object
+    ]),
     type: PropTypes.string,
     droppableId: PropTypes.string,
     componentFormat: PropTypes.string,
@@ -33,7 +37,8 @@ export default class DroppableComponent extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      items: this.props.items
+      items: this.props.items,
+      labels: this.props.labels
     };
   }
 
@@ -41,10 +46,14 @@ export default class DroppableComponent extends Component{
     if(JSON.stringify(this.state.items) != JSON.stringify(nextProps.items)){
       this.setState({items: nextProps.items});
     }
+    if(JSON.stringify(this.state.labels) != JSON.stringify(nextProps.labels)){
+      this.setState({labels: nextProps.labels});
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return (JSON.stringify(this.state.items) != JSON.stringify(nextState.items))
+    return (JSON.stringify(this.state.items) != JSON.stringify(nextState.items) ||
+           (JSON.stringify(this.state.labels) != JSON.stringify(nextProps.labels)));
   }
 
   render() {
@@ -57,33 +66,45 @@ export default class DroppableComponent extends Component{
       lastItemId = this.state.items[this.state.items.length - 1].id;
       quizId = this.state.items[this.state.items.length - 1].quizId;
     }
+    let listClassName = "ordered-list";
+    if(this.props.type.indexOf('question') >= 0){
+      listClassName += " questions-list";
+    }
+    else if(this.props.type.indexOf('answer') >= 0){
+      listClassName += " answers-list";
+    }
+    else if(this.props.type.indexOf('profiles') >= 0){
+      listClassName += " profiles-list";
+    }
     return (
       <Droppable type={ this.props.type } droppableId={ this.props.droppableId } key={ this.props.droppableId }>
         {(provided, snapshot) => (
           <div 
             ref={provided.innerRef}>
-            {this.state.items.map((item, index) => {
-              if(this.props.componentFormat == 'quiz'){
-                return(
-                  <DraggableQuizComponent type={ this.props.type } item={ item } index={ index } lastItem={ (this.state.items.length-1) == index}></DraggableQuizComponent>
-                )
+            <ol className={listClassName}>
+              {this.state.items.map((item, index) => {
+                if(this.props.componentFormat == 'quiz'){
+                  return(
+                    <DraggableQuizComponent labels={this.state.labels} type={ this.props.type } item={ item } index={ index } lastItem={ (this.state.items.length-1) == index}></DraggableQuizComponent>
+                  )
+                }
+                else{
+                  return(
+                    <DraggableProfileComponent labels={this.state.labels} type={ this.props.componentFormat } item={ item } index={ index }></DraggableProfileComponent>
+                  )
+                }
               }
-              else{
-                return(
-                  <DraggableProfileComponent type={ this.props.componentFormat } item={ item } index={ index }></DraggableProfileComponent>
-                )
-              }
-            }
-            )}
+              )}
+            </ol>
             {provided.placeholder}
             {
               this.props.componentFormat == 'quiz' ? 
                   this.props.type == 'question' ?
-                    <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addQuestion(quizId, lastItemId);}}>+ Adicionar nova pergunta</button>
+                    <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addQuestion(quizId, lastItemId);}}>{this.state.labels && this.state.labels["pages.quiz.add_new_question"]}</button>
                     :
-                    <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addAnswer(this.props.questionId);}}>+ Adicionar nova resposta</button>
+                    <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addAnswer(this.props.questionId);}}>{this.state.labels && this.state.labels["pages.quiz.add_new_answer"]}</button>
                 :
-                <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addProfile(quizId);}}>+ Adicionar novo perfil</button>
+                <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addProfile(quizId);}}>{this.state.labels && this.state.labels["pages.quiz.add_new_profile"]}</button>
             }
           </div>
         )}

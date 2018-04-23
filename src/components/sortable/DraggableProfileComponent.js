@@ -8,13 +8,18 @@ import './SortableComponent.scss';
 export default class DraggableProfileComponent extends Component{
   static propTypes = { 
     item: PropTypes.object,
-    index: PropTypes.number
+    index: PropTypes.number,
+    labels: PropTypes.oneOfType([
+      PropTypes.array,
+      PropTypes.object
+    ]),
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      item: this.props.item
+      item: this.props.item,
+      labels: this.props.labels
     };
   }
 
@@ -22,24 +27,31 @@ export default class DraggableProfileComponent extends Component{
     if(JSON.stringify(this.state.item) != JSON.stringify(nextProps.item)){
       this.setState({item: nextProps.item});
     }
+    if(JSON.stringify(this.state.labels) != JSON.stringify(nextProps.labels)){
+      this.setState({labels: nextProps.labels});
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState){
-    return (JSON.stringify(this.state.item) != JSON.stringify(nextState.item));
+    return (JSON.stringify(this.state.item) != JSON.stringify(nextState.item) ||
+           (JSON.stringify(this.state.labels) != JSON.stringify(nextProps.labels)));
   }
 
   createActions = () => {
     let item = this.state.item;
     return (
       <div className='actions-wrapper'>
-        <button className='remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeProfile();}}>Remover</button>
-        <button className='duplicate-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.duplicateProfile();}}>Duplicar</button>
+        <button className='remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeProfile();}}>{this.state.labels && this.state.labels["general.remove"]}</button>
+        <button className='duplicate-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.duplicateProfile();}}>{this.state.labels && this.state.labels["general.duplicate"]}</button>
       </div>  
     );
   }
 
   removeProfile = () => {
     let item = this.state.item;
+    if(item.code){
+      window.removeMedia(item.code);
+    }
     QuizStore.removeProfile(item.id);
   }
 
@@ -62,6 +74,9 @@ export default class DraggableProfileComponent extends Component{
   }
 
   onBadgeChange = (file, base64) => {
+    if(this.state.item.code){
+      window.removeMedia(this.state.item.code);
+    }
     QuizStore.updateProfileBadge(this.state.item.id, file, base64);
   }
 
@@ -70,8 +85,8 @@ export default class DraggableProfileComponent extends Component{
     const item = this.state.item;
     let profileId = item.id
     let customClassName = `profile-${item.id}`;
-    let titlePlaceholder = 'New Profile';
-    let descriptionPlaceholder = 'New Profile Text';
+    let titlePlaceholder = this.state.labels && this.state.labels["pages.quiz.add_new_profile"];
+    let descriptionPlaceholder = this.state.labels && this.state.labels["pages.quiz.new_description_profile"];
     return (
       <Draggable key={`${type}-${item.id}`} type={ type } draggableId={`${type}-${item.id}`} id={index} index={index}>
         {(provided, snapshot) => (
@@ -79,12 +94,18 @@ export default class DraggableProfileComponent extends Component{
             <div
               ref={provided.innerRef}
               {...provided.draggableProps}
-              className='rc-quiz-container'>
-              <span {...provided.dragHandleProps} style={{ display: 'inline-block', margin: '0 10px', border: '1px solid #000'}}>Drag</span>
-              <ProfileEditorComponent placeholder={titlePlaceholder} content={item.name} profileId={item.id} className={customClassName} type='title' id={item.id} ></ProfileEditorComponent>
-              <ProfileEditorComponent placeholder={descriptionPlaceholder} content={item.description} profileId={item.id} className={customClassName} type='description' id={`${item.id}-description`} ></ProfileEditorComponent>
-              <ImageUploader onChange={this.onBadgeChange} badge={item.badge}></ImageUploader>
-              {this.createActions()}
+              className={'rc-quiz-container ' + type}>
+              <span {...provided.dragHandleProps} className='drag-handler'>
+                <span>&middot;</span>
+                <span>&middot;</span>
+                <span>&middot;</span>
+              </span>
+              <li>
+                <ProfileEditorComponent placeholder={titlePlaceholder} content={item.name} profileId={item.id} className={customClassName} type='title' id={item.id} ></ProfileEditorComponent>
+                <ProfileEditorComponent placeholder={descriptionPlaceholder} content={item.description} profileId={item.id} className={customClassName} type='description' id={`${item.id}-description`} ></ProfileEditorComponent>
+                <ImageUploader labels={this.state.labels} onChange={this.onBadgeChange} badge={item.badge}></ImageUploader>
+                {this.createActions()}
+              </li>
             </div>
             {provided.placeholder}
           </div>

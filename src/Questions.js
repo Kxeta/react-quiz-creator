@@ -11,20 +11,24 @@ export default class Questions extends Component {
   constructor(props){
     super(props);
     this.state = {
-      items: []
+      items: [],
+      labels: {}
     }
     if(window){
       window.updateQuizStateJSON = this.updateQuizStateJSON;
+      window.updateLabels = this.updateLabels;
       window.getQuizStateJSON = this.getQuizStateJSON;
     }
   }
-
+  
   componentDidMount() {
     window.updateQuizStateJSON = this.updateQuizStateJSON;
+    window.updateLabels = this.updateLabels;
 
     window.getQuizStateJSON = this.getJSONQuiz;
     window.getQuizStateStringifiedJSON = this.getStringfiedJSONQuiz;
     // this.updateQuizStateJSON(this.getContentJSON());
+    this.updateLabels(this.getLabelsJSON());
    }
 
   getQuizStateJSON = () =>{
@@ -34,9 +38,32 @@ export default class Questions extends Component {
   getStringfiedJSONQuiz = () =>{
     return QuizStore.getStringfiedJSONQuiz();
   }
- 
+  
   updateQuizStateJSON = (items) => {
     QuizStore.quiz = items;
+  }
+  updateLabels = (labels) => {
+    this.setState({
+      labels
+    });
+  }
+
+  getLabelsJSON = () => {
+    const json = {
+      "pages.quiz.add_new_question": "Adicionar nova pergunta",
+      "pages.quiz.new_question": "Nova pergunta",
+      "pages.quiz.add_new_answer": "Adicionar nova resposta",
+      "pages.quiz.new_answer": "Nova resposta",
+      "pages.quiz.add_new_profile": "Adicionar nova perfil",
+      "pages.quiz.new_profile": "Novo perfil",
+      "pages.quiz.new_description_profile": "Descrição do perfil",
+      "pages.quiz.correct_answer": "Resposta correta",
+      "general.mandatory": "Obrigatória",
+      "general.remove": "Remover",
+      "general.duplicate": "Duplicar",
+      "general.change": "Trocar",
+    }
+    return json;
   }
   
   getContentJSON = () => {
@@ -103,7 +130,7 @@ export default class Questions extends Component {
     return (
       <Provider QuizStore = { QuizStore }>
         <div>
-          <DragDropComponent type='question' items={ QuizStore } droppableId='question-droppable'/>
+          <DragDropComponent labels={this.state.labels} type='question' items={ QuizStore } droppableId='question-droppable'/>
           <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.getJSONQuiz(); } }>Get Json!</button>
         </div>
       </Provider>

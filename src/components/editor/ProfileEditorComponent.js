@@ -40,6 +40,13 @@ class ProfileEditorComponent extends Component {
     QuizStore.updateProfileContent(this.props.profileId, this.props.type, this.state.content);
   }
 
+  componentDidMount(){
+    let quillElements = document.getElementsByClassName("ql-tooltip-editor");
+    for(let i = 0; i < quillElements.length; i++){
+      quillElements[i].getElementsByTagName("INPUT")[0].name = 'link-input';
+    };
+  }
+
   componentWillMount(){
     this.setState({
       content : this.props.content

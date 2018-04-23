@@ -83,6 +83,7 @@ class QuizStore {
         profilesJson[i].id = null;
       }
     }
+    console.log(this.profiles,profilesJson);
     return profilesJson;
   }
 
