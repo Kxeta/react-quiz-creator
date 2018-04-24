@@ -29,14 +29,14 @@ class QuizStore {
     for(let i in quizJson){
       if(quizJson[i].text.length){
         quizJson[i].order = parseInt(i) + 1;
-        if(String(quizJson[i].id).indexOf('new-') > -1){
+        if(String(quizJson[i].id).indexOf('new_') > -1){
           quizJson[i].id = null;
         }
         if(quizJson[i].answers.length){
           for(let j in quizJson[i].answers){
             if(quizJson[i].answers[j].text.length){
               quizJson[i].answers[j].order = parseInt(j) + 1;
-              if(String(quizJson[i].answers[j].id).indexOf('new-') > -1){
+              if(String(quizJson[i].answers[j].id).indexOf('new_') > -1){
                 quizJson[i].answers[j].id = null;
                 quizJson[i].answers[j].questionId = quizJson[i].id;
               }
@@ -59,13 +59,13 @@ class QuizStore {
     let quizJson = this.quiz;
     for(let i in quizJson){
       quizJson[i].order = parseInt(i) + 1;
-      if(String(quizJson[i].id).indexOf('new-') > -1){
+      if(String(quizJson[i].id).indexOf('new_') > -1){
         quizJson[i].id = null;
       }
       if(quizJson[i].answers.length){
         for(let j in quizJson[i].answers){
           quizJson[i].answers[j].order = parseInt(j) + 1;
-          if(String(quizJson[i].answers[j].id).indexOf('new-') > -1){
+          if(String(quizJson[i].answers[j].id).indexOf('new_') > -1){
             quizJson[i].answers[j].id = null;
             quizJson[i].answers[j].questionId = quizJson[i].id;
           }
@@ -79,7 +79,7 @@ class QuizStore {
     let profilesJson = this.profiles;
     for(let i in profilesJson){
       profilesJson[i].order = parseInt(i) + 1;
-      if(String(profilesJson[i].id).indexOf('new-') > -1){
+      if(String(profilesJson[i].id).indexOf('new_') > -1){
         profilesJson[i].id = null;
       }
     }
@@ -91,7 +91,7 @@ class QuizStore {
     let profilesJson = this.profiles;
     for(let i in profilesJson){
       profilesJson[i].order = parseInt(i) + 1;
-      if(String(profilesJson[i].id).indexOf('new-') > -1){
+      if(String(profilesJson[i].id).indexOf('new_') > -1){
         profilesJson[i].id = null;
       }
     }
@@ -191,9 +191,9 @@ class QuizStore {
   //ADD actions
   @action
   addQuestion(quizId, prevQuestionId = 0){    
-    let newQuestionId = "new-" + Math.floor(Math.random()*100*Math.random()*5);
+    let newQuestionId = "new_" + Math.floor(Math.random()*100*Math.random()*5);
     let newAnswer = { 
-      "id":"new-" + Math.floor(Math.random()*100*Math.random()*5),
+      "id":"new_" + Math.floor(Math.random()*100*Math.random()*5),
       "text": "",
       "correct":true,
       "order":null,
@@ -224,7 +224,7 @@ class QuizStore {
   @action
   addAnswer(questionId){
     let newAnswer = { 
-      "id":"new-" + Math.floor(Math.random()*100*Math.random()*5),
+      "id":"new_" + Math.floor(Math.random()*100*Math.random()*5),
       "text": "",
       "correct":false,
       "order":null,
@@ -240,7 +240,7 @@ class QuizStore {
   @action
   addProfile(quizId){
     let newProfile = { 
-      "id": "new-" + Math.floor(Math.random()*100*Math.random()*5),
+      "id": "new_" + Math.floor(Math.random()*100*Math.random()*5),
       "name": "",
       "description": "",
       "quizId": quizId,
@@ -299,7 +299,7 @@ class QuizStore {
   duplicateQuestion(id){
     let modQuiz = this.quiz;
     let questionIndex = modQuiz.findIndex((item) => {return item.id === id});
-    const questionId = "new-" + Math.floor((Math.random() + 1)*100*Math.random()*5);
+    const questionId = "new_" + Math.floor((Math.random() + 1)*100*Math.random()*5);
     let questionCopy = { 
       "id": questionId,
       "text": modQuiz[questionIndex].text,
@@ -310,7 +310,7 @@ class QuizStore {
     };
     for (let i in questionCopy.answers){
       let answerCopy = questionCopy.answers[i];
-      answerCopy.id = "new-" + Math.floor(Math.random()*100*Math.random()*5);
+      answerCopy.id = "new_" + Math.floor(Math.random()*100*Math.random()*5);
       answerCopy.questionId = questionId;
     }
     modQuiz.splice(questionIndex + 1, 0, questionCopy);
@@ -323,7 +323,7 @@ class QuizStore {
   duplicateProfile(id){
     let modProfiles = this.profiles;
     let profileIndex = modProfiles.findIndex((item) => {return item.id === id});
-    const profileId = "new-" + Math.floor((Math.random() + 1)*100*Math.random()*5);
+    const profileId = "new_" + Math.floor((Math.random() + 1)*100*Math.random()*5);
     let profileCopy = { 
       "id": profileId,
       "name": modProfiles[profileIndex].name,

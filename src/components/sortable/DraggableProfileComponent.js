@@ -105,7 +105,21 @@ export default class DraggableProfileComponent extends Component{
                 <li className='rc-quiz-content'>
                   <ProfileEditorComponent placeholder={titlePlaceholder} content={item.name} profileId={item.id} className={customClassName} type='title' id={item.id} ></ProfileEditorComponent>
                   <ProfileEditorComponent placeholder={descriptionPlaceholder} content={item.description} profileId={item.id} className={customDescriptionClassName} type='description' id={`${item.id}-description`} ></ProfileEditorComponent>
-                  <ImageUploader labels={this.state.labels} onChange={this.onBadgeChange} badge={item.badge}></ImageUploader>
+                  <div className='profile-image-upload-wrapper'>
+                    <p className='profile-image-upload-title'>{this.state.labels && this.state.labels["pages.quiz.insert_image"]}</p>
+                    <div className='profile-image-upload-content'>
+                      <div className='profile-image-upload'>
+                        <ImageUploader labels={this.state.labels} onChange={this.onBadgeChange} badge={item.badge}></ImageUploader>
+                      </div>
+                      <div className='profile-image-upload-description'>
+                        <p>{this.state.labels && this.state.labels["pages.quiz.insert_image_tip_1"]}</p>
+                        <p>{this.state.labels && this.state.labels["pages.quiz.insert_image_tip_2"]}</p>
+                        <p>{this.state.labels && this.state.labels["pages.quiz.insert_image_tip_3"]}</p>
+                      </div>
+
+                    </div>
+
+                  </div>
                 </li>
                 {this.createActions()}
               </div>

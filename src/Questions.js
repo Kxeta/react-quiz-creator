@@ -62,6 +62,11 @@ export default class Questions extends Component {
       "general.remove": "Remover",
       "general.duplicate": "Duplicar",
       "general.change": "Trocar",
+      "pages.quiz.insert_image": "Inserir imagem",
+      "pages.quiz.send_image": "Enviar imagem",
+      "pages.quiz.insert_image_tip_1": "Quando o usuário concluir o Quiz e se encaixar neste Perfil, essa é a imagem que aparecerá em seu resultado.",
+      "pages.quiz.insert_image_tip_2": "Dica: utilize fotos que se encaixem no contexto ou crie uma imagem customizada.",
+      "pages.quiz.insert_image_tip_3": "Tamanho Máximo: 2Mb",
     }
     return json;
   }

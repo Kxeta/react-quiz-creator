@@ -1,6 +1,9 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import './ImageUploader.scss';
+
+import noImage from '../../images/no-img.svg';
 
 export default class ImageUploader extends Component {
   static propTypes = { 
@@ -98,30 +101,39 @@ export default class ImageUploader extends Component {
   render() {
     let {imageBase64} = this.state;
     let $imagePreview = null;
+    let classNamePreview='imgPreview';
     if (imageBase64) {
+      classNamePreview += ' hasPreview'
       $imagePreview = (
       <Fragment>
         <img src={imageBase64} />
-        <button className='btn' onClick={(e)=>this._handleRemoveImage(e)}>{this.state.labels["general.remove"]}</button>
-        <button className='btn' onClick={(e)=>this._handleChangeImage(e)}>{this.state.labels["general.change"]}</button>
+        <div className='img-preview-actions'>
+          <button className='btn btn-change' onClick={(e)=>this._handleChangeImage(e)}>{this.state.labels && this.state.labels["general.change"]}</button>
+          <button className='btn btn-remove' onClick={(e)=>this._handleRemoveImage(e)}>{this.state.labels && this.state.labels["general.remove"]}</button>
+        </div>
       </Fragment>
     );
-    } else {
-      $imagePreview = (<div></div>);
+  } else {
+    $imagePreview = (
+      <div>
+        <img src={noImage} />
+        <p>{this.state.labels && this.state.labels["pages.quiz.send_image"]}</p>
+      </div>);
     }
+
 
     return (
       <div className="previewComponent">
         <form ref="imageForm" onSubmit={(e)=>this._handleSubmit(e)}>
           <label ref="imageController">
-            <input className="fileInput" 
+            <input className="fileInput hidden" 
               type="file" 
               accept="image/*"
               onChange={(e)=>this._handleImageChange(e)}
               name="imageSubmitter" 
               ref="imageInput"
               />
-            <div className="imgPreview">
+            <div className={classNamePreview}>
               {$imagePreview}
             </div>
           </label>
