@@ -40,9 +40,9 @@ export default class DraggableProfileComponent extends Component{
   createActions = () => {
     let item = this.state.item;
     return (
-      <div className='actions-wrapper'>
-        <button className='remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeProfile();}}>{this.state.labels && this.state.labels["general.remove"]}</button>
-        <button className='duplicate-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.duplicateProfile();}}>{this.state.labels && this.state.labels["general.duplicate"]}</button>
+      <div className='actions-wrapper action-wrapper-profile'>
+        <button className='btn btn-quiz-action remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeProfile();}}><i class="button-icon glyphicon glyphicon-trash" /> {this.state.labels && this.state.labels["general.remove"]}</button>
+        <button className='btn btn-quiz-action duplicate-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.duplicateProfile();}}><i class="button-icon glyphicon glyphicon-duplicate" /> {this.state.labels && this.state.labels["general.duplicate"]}</button>
       </div>  
     );
   }
@@ -85,6 +85,7 @@ export default class DraggableProfileComponent extends Component{
     const item = this.state.item;
     let profileId = item.id
     let customClassName = `profile-${item.id}`;
+    let customDescriptionClassName = customClassName + ' description-editor';
     let titlePlaceholder = this.state.labels && this.state.labels["pages.quiz.add_new_profile"];
     let descriptionPlaceholder = this.state.labels && this.state.labels["pages.quiz.new_description_profile"];
     return (
@@ -100,12 +101,14 @@ export default class DraggableProfileComponent extends Component{
                 <span>&middot;</span>
                 <span>&middot;</span>
               </span>
-              <li>
-                <ProfileEditorComponent placeholder={titlePlaceholder} content={item.name} profileId={item.id} className={customClassName} type='title' id={item.id} ></ProfileEditorComponent>
-                <ProfileEditorComponent placeholder={descriptionPlaceholder} content={item.description} profileId={item.id} className={customClassName} type='description' id={`${item.id}-description`} ></ProfileEditorComponent>
-                <ImageUploader labels={this.state.labels} onChange={this.onBadgeChange} badge={item.badge}></ImageUploader>
+              <div className='rc-quiz-content-wrapper'>
+                <li className='rc-quiz-content'>
+                  <ProfileEditorComponent placeholder={titlePlaceholder} content={item.name} profileId={item.id} className={customClassName} type='title' id={item.id} ></ProfileEditorComponent>
+                  <ProfileEditorComponent placeholder={descriptionPlaceholder} content={item.description} profileId={item.id} className={customDescriptionClassName} type='description' id={`${item.id}-description`} ></ProfileEditorComponent>
+                  <ImageUploader labels={this.state.labels} onChange={this.onBadgeChange} badge={item.badge}></ImageUploader>
+                </li>
                 {this.createActions()}
-              </li>
+              </div>
             </div>
             {provided.placeholder}
           </div>

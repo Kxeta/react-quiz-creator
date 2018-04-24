@@ -2,8 +2,35 @@
   background: white;
   color: #444
 }
+.ql-tooltip-arrow{
+  border-bottom-color: #1a1a1a  !important;
+}
 .ql-tooltip{
   z-index: 2;
+  border-radius: 3px !important;
+  margin: 8px;
+  background-color: #1a1a1a  !important;
+  .ql-formats{
+    margin: 6px !important;
+    button{
+      padding: 1px;
+      &:not(:last-of-type){
+        border-right: 1px solid #5a5a5a;
+      }
+      svg{
+        padding: 2px;
+        border: 1px solid transparent;
+        border-radius: 5px;
+        margin: 0 2px;
+      }
+      &.ql-active{
+        svg{
+          background: #333333;
+          border-color:#808080;
+        }
+      }
+    }
+  }
 }
 .ql-editor{
   padding: 12px 3px;

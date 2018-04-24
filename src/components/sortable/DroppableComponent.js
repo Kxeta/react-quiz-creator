@@ -100,11 +100,21 @@ export default class DroppableComponent extends Component{
             {
               this.props.componentFormat == 'quiz' ? 
                   this.props.type == 'question' ?
-                    <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addQuestion(quizId, lastItemId);}}>{this.state.labels && this.state.labels["pages.quiz.add_new_question"]}</button>
+                    <div className='new-component-card'>
+                      <button className='btn btn-add-new-component add-new-question' onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addQuestion(quizId, lastItemId);}}>
+                        <i className='glyphicon glyphicon-plus'></i>
+                        {this.state.labels && this.state.labels["pages.quiz.add_new_question"]}
+                      </button>
+                    </div>
                     :
-                    <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addAnswer(this.props.questionId);}}>{this.state.labels && this.state.labels["pages.quiz.add_new_answer"]}</button>
+                      <button className='btn btn-add-new-component add-new-answer' onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addAnswer(this.props.questionId);}}><i className='glyphicon glyphicon-plus'></i>{this.state.labels && this.state.labels["pages.quiz.add_new_answer"]}</button>
                 :
-                <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addProfile(quizId);}}>{this.state.labels && this.state.labels["pages.quiz.add_new_profile"]}</button>
+                <div className='new-component-card'>
+                  <button className='btn btn-add-new-component add-new-question' onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addProfile(quizId);}}>
+                    <i className='glyphicon glyphicon-plus'></i>
+                    {this.state.labels && this.state.labels["pages.quiz.add_new_profile"]}
+                  </button>
+                </div>
             }
           </div>
         )}

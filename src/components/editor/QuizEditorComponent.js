@@ -68,11 +68,11 @@ class QuizEditorComponent extends Component {
 
   render() {
     let formats = this.props.formats || [
-      'bold', 'italic', 'link'
+      'bold', 'italic', 'underline', 'link'
     ];
     let modules = this.props.modules || {
       toolbar:[
-        ['bold', 'italic', 'link']
+        ['bold', 'italic', 'underline', 'link']
       ],
       keyboard: {
         bindings: {

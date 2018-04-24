@@ -113,7 +113,7 @@ export default class Profiles extends Component {
         <Provider QuizStore = { QuizStore }>
           <div>
             <DragDropComponent labels={this.state.labels} type='profiles' items={ QuizStore } droppableId='profiles-droppable'/>
-            <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.getJSONProfiles(); } }>Get Json!</button>
+            <button className='btn' onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.getJSONProfiles(); } }>Get Json!</button>
           </div>
       </Provider>
     );

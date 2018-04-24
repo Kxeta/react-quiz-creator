@@ -171,13 +171,19 @@ class QuizStore {
     let profileIndex = -1;
     profileIndex = modProfiles.findIndex((item) => {return item.id === id});
     if(profileIndex > -1){
-      modProfiles[profileIndex].badge.url = null;
-      modProfiles[profileIndex].badge.mediaUpload = {
-        "fileName": file ? file.name : null,
-        "type": file ? file.type : null,
-        "size": file ? file.size : null,
-        "data": strippedBase64
-      };
+      if(file == null && base64 == null){
+        modProfiles[profileIndex].badge = null;
+      }
+      else{
+        modProfiles[profileIndex].badge = {};
+        modProfiles[profileIndex].badge.url = null;
+        modProfiles[profileIndex].badge.mediaUpload = {
+          "fileName": file ? file.name : null,
+          "type": file ? file.type : null,
+          "size": file ? file.size : null,
+          "data": strippedBase64
+        };
+      }
     }
     this.profiles = modProfiles;
   }

@@ -131,7 +131,7 @@ export default class Questions extends Component {
       <Provider QuizStore = { QuizStore }>
         <div>
           <DragDropComponent labels={this.state.labels} type='question' items={ QuizStore } droppableId='question-droppable'/>
-          <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.getJSONQuiz(); } }>Get Json!</button>
+          <button className='btn' onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.getJSONQuiz(); } }>Get Json!</button>
         </div>
       </Provider>
     );

@@ -73,11 +73,11 @@ export default class ImageUploader extends Component {
 
   componentWillReceiveProps(nextProps) {
     let url='';
-    if(nextProps.badge.mediaUpload && nextProps.badge.mediaUpload.data){
+    if(nextProps.badge && nextProps.badge.mediaUpload && nextProps.badge.mediaUpload.data){
       url = `data:${nextProps.badge.mediaUpload.type};base64,${nextProps.badge.mediaUpload.data}`
     }
     else{
-      url = nextProps.badge.url;
+      url = nextProps.badge && nextProps.badge.url;
     }
     if(this.state.imageBase64 != url){
       this.setState({imageBase64: url});
@@ -102,8 +102,8 @@ export default class ImageUploader extends Component {
       $imagePreview = (
       <Fragment>
         <img src={imageBase64} />
-        <button onClick={(e)=>this._handleRemoveImage(e)}>{this.state.labels["general.remove"]}</button>
-        <button onClick={(e)=>this._handleChangeImage(e)}>{this.state.labels["general.change"]}</button>
+        <button className='btn' onClick={(e)=>this._handleRemoveImage(e)}>{this.state.labels["general.remove"]}</button>
+        <button className='btn' onClick={(e)=>this._handleChangeImage(e)}>{this.state.labels["general.change"]}</button>
       </Fragment>
     );
     } else {
