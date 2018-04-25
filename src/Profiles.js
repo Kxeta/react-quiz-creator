@@ -3,6 +3,7 @@ import { Provider } from 'mobx-react';
 import './styles/main.scss';
 import { DragDropComponent, ImageUploader } from './components';
 import { QuizStore } from './modules';
+import { ErrorMessage } from './components/error';
 
 
 
@@ -120,6 +121,7 @@ export default class Profiles extends Component {
           <div>
             <DragDropComponent labels={this.state.labels} type='profiles' items={ QuizStore } droppableId='profiles-droppable'/>
             <button className='btn' onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.getJSONProfiles(); } }>Get Json!</button>
+            <ErrorMessage type='error' show={true}>Teste mensagem</ErrorMessage>
           </div>
       </Provider>
     );
