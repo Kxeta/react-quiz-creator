@@ -32,7 +32,8 @@ export default class ErrorMessage extends Component {
           this.setState({
             show: false
           })
-        }, 300000)
+          QuizStore.clearErrors()
+        }, 5000)
       }
     );
   }
@@ -49,7 +50,7 @@ export default class ErrorMessage extends Component {
     return (
       <div className={classNameMessage}>
         <div className='quiz-message-content'>
-          <button onClick={(e) => {e.preventDefault(); e.stopPropagation(); this.setState({show: false});}} className='quiz-message-close'><i className='glyphicon glyphicon-remove'></i></button>
+          <button onClick={(e) => {e.preventDefault(); e.stopPropagation(); this.setState({show: false}); QuizStore.clearErrors()}} className='quiz-message-close'><i className='glyphicon glyphicon-remove'></i></button>
           {this.props.children}
         </div>
       </div>

@@ -4,9 +4,27 @@ import { observable, action, computed } from 'mobx';
 class QuizStore {
   @observable items = '[]';
   @observable _profiles = '[]';
+  @observable errors = '[]';
   
   //Store
   set quiz (items) {
+    let questionId = '';
+    for(let i in items){
+      items[i].order = parseInt(i) + 1;
+      if(!items[i].id){
+        questionId = "new_" + Math.floor(Math.random()*100*Math.random()*5);
+        items[i].id = questionId;
+      }
+      if(items[i].answers.length){
+        for(let j in items[i].answers){
+          items[i].answers[j].order = parseInt(j) + 1;
+          if(!items[i].answers[j].id){
+            items[i].answers[j].id = "new_" + Math.floor(Math.random()*100*Math.random()*5);
+            items[i].answers[j].questionId = questionId;
+          }
+        }
+      }
+    }
     this.items = JSON.stringify(items);
   }
   
@@ -20,6 +38,14 @@ class QuizStore {
   
   get profiles () {
     return JSON.parse(this._profiles);
+  }
+
+  set errors (errors) {
+    this.errors = JSON.stringify(errors);
+  }
+  
+  get errors () {
+    return JSON.parse(this.errors);
   }
   
   //Create JSON return to send to the back-end
@@ -46,55 +72,57 @@ class QuizStore {
             }
           }
         }
+        else{
+          quizJson.splice(i,1);
+        }
       }
       else{
         quizJson.splice(i,1);
       }
     }
-    console.log(this.quiz,quizJson);
-    return quizJson;
+    let errors = [];
+    for(let i in quizJson){
+      if(quizJson[i].answers.length < window.minAnswers){
+        let question = parseInt(i) + 1;
+        errors.push({
+          'questionNr': question,
+          'error': 'min_answers_number'
+        })
+      }
+    }
+    this.errors = errors;
+    console.log(errors);
+    return errors.length ? null : quizJson;
   }
 
   getStringfiedJSONQuiz() {
-    let quizJson = this.quiz;
-    for(let i in quizJson){
-      quizJson[i].order = parseInt(i) + 1;
-      if(String(quizJson[i].id).indexOf('new_') > -1){
-        quizJson[i].id = null;
-      }
-      if(quizJson[i].answers.length){
-        for(let j in quizJson[i].answers){
-          quizJson[i].answers[j].order = parseInt(j) + 1;
-          if(String(quizJson[i].answers[j].id).indexOf('new_') > -1){
-            quizJson[i].answers[j].id = null;
-            quizJson[i].answers[j].questionId = quizJson[i].id;
-          }
-        }
-      }
-    }
+    let quizJson = this.getJSONQuiz();
+    
     return JSON.stringify(quizJson);
   }
 
   getJSONProfiles() {
     let profilesJson = this.profiles;
     for(let i in profilesJson){
-      profilesJson[i].order = parseInt(i) + 1;
-      if(String(profilesJson[i].id).indexOf('new_') > -1){
-        profilesJson[i].id = null;
+      console.log(profilesJson[i].name.length && profilesJson[i].description.length, profilesJson[i].name.length, profilesJson[i].description.length)
+      if(profilesJson[i].name.length && profilesJson[i].description.length){
+        profilesJson[i].order = parseInt(i) + 1;
+        if(String(profilesJson[i].id).indexOf('new_') > -1){
+          profilesJson[i].id = null;
+        }
+      }
+      else{
+        profilesJson.splice(i,1);
       }
     }
-    console.log(this.profiles,profilesJson);
+    
+    console.log(this.profiles,profilesJson, profilesJson.length);
+    window.minAnswers = profilesJson.length;
     return profilesJson;
   }
 
   getStringfiedJSONProfiles() {
-    let profilesJson = this.profiles;
-    for(let i in profilesJson){
-      profilesJson[i].order = parseInt(i) + 1;
-      if(String(profilesJson[i].id).indexOf('new_') > -1){
-        profilesJson[i].id = null;
-      }
-    }
+    let profilesJson = this.getJSONProfiles()
     return JSON.stringify(profilesJson);
   }
   
@@ -192,12 +220,17 @@ class QuizStore {
   @action
   addQuestion(quizId, prevQuestionId = 0){    
     let newQuestionId = "new_" + Math.floor(Math.random()*100*Math.random()*5);
-    let newAnswer = { 
-      "id":"new_" + Math.floor(Math.random()*100*Math.random()*5),
-      "text": "",
-      "correct":true,
-      "order":null,
-      "questionId": newQuestionId
+    let answers = []
+    for(let i = 0; i < window.minAnswers; i++){
+      let correct = i == 0 ? true : false;
+      let newAnswer = { 
+        "id":"new_" + Math.floor(Math.random()*100*Math.random()*5),
+        "text": "",
+        "correct":correct,
+        "order":null,
+        "questionId": newQuestionId
+      }
+      answers.push(newAnswer);
     }
 
     let newQuestion = { 
@@ -205,7 +238,7 @@ class QuizStore {
       "text": "",
       "quizId": quizId,
       "order": null,
-      "answers": [newAnswer],
+      "answers": answers,
       "required": false
     }
     let modQuiz = this.quiz;
@@ -273,15 +306,30 @@ class QuizStore {
     this.quiz = result;
   }
   @action
-  removeAnswer(id, questionId){
+  removeAnswer(id, questionId, minAnswers = 1){
+    let errors = [];
     let modQuiz = this.quiz;
     let questionIndex = modQuiz.findIndex((item) => {return item.id === questionId});
     const result = Array.from(modQuiz[questionIndex].answers);
-    let answerIndex = result.findIndex((item) => {return item.id === id});
-    const [removed] = result.splice(answerIndex, 1);
-    modQuiz[questionIndex].answers = result;
+    if(window && window.minAnswers){
+      minAnswers = window.minAnswers;
+    }
+    if(modQuiz[questionIndex].answers.length > minAnswers){
+      let answerIndex = result.findIndex((item) => {return item.id === id});
+      const [removed] = result.splice(answerIndex, 1);
+      modQuiz[questionIndex].answers = result;
+    }
+    else{
+      let question = questionIndex + 1;
+      console.log(question);
+      errors.push({
+        'questionNr': question,
+        'error': 'min_answers_number'
+      })
+    }
     this.quiz = modQuiz;
     this.checkCorrectAnswer(questionId);
+    this.errors = errors;
   }
 
   @action
@@ -292,6 +340,11 @@ class QuizStore {
     const [removed] = result.splice(questionIndex, 1);
     
     this.profiles = result;
+  }
+
+  @action
+  clearErrors(){
+    this.errors = [];
   }
   
   //Duplicate actions
@@ -330,7 +383,7 @@ class QuizStore {
       "description": modProfiles[profileIndex].description,
       "quizId": modProfiles[profileIndex].quizId,
       "order": null,
-      "badge": modProfiles[profileIndex].badge,
+      "badge": null,
       "pageCode": modProfiles[profileIndex].pageCode,
       "moduleId": modProfiles[profileIndex].moduleId
     };

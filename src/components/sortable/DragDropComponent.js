@@ -91,7 +91,7 @@ export default class DragDropComponent extends Component{
     }
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        <DroppableComponent labels={this.props.labels} type={ this.props.type } componentFormat={componentFormat} items={items} droppableId={ this.props.droppableId }>
+        <DroppableComponent labels={this.props.labels} errors={this.props.QuizStore.errors} type={ this.props.type } componentFormat={componentFormat} items={items} droppableId={ this.props.droppableId }>
         </DroppableComponent>
       </DragDropContext>
     );

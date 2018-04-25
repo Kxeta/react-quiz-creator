@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import DraggableQuizComponent from './DraggableQuizComponent';
 import DraggableProfileComponent from './DraggableProfileComponent';
 import { QuizStore } from '../../modules';
+import { ErrorMessage } from '../error';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -25,6 +26,11 @@ export default class DroppableComponent extends Component{
       PropTypes.array,
       PropTypes.object
     ]),
+    errors: PropTypes.oneOfType([
+      PropTypes.array,
+      PropTypes.object,
+      PropTypes.string
+    ]),
     type: PropTypes.string,
     droppableId: PropTypes.string,
     componentFormat: PropTypes.string,
@@ -38,7 +44,8 @@ export default class DroppableComponent extends Component{
     super(props);
     this.state = {
       items: this.props.items,
-      labels: this.props.labels
+      labels: this.props.labels,
+      errors: this.props.errors
     };
   }
 
@@ -49,12 +56,28 @@ export default class DroppableComponent extends Component{
     if(JSON.stringify(this.state.labels) != JSON.stringify(nextProps.labels)){
       this.setState({labels: nextProps.labels});
     }
+    if(JSON.stringify(this.state.errors) != JSON.stringify(nextProps.errors)){
+      this.setState({errors: nextProps.errors});
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return (JSON.stringify(this.state.items) != JSON.stringify(nextState.items) ||
-           (JSON.stringify(this.state.labels) != JSON.stringify(nextProps.labels)));
+            JSON.stringify(this.state.errors) != JSON.stringify(nextState.errors) ||
+            JSON.stringify(this.state.labels) != JSON.stringify(nextProps.labels));
   }
+
+  createErrorMessage = (errorList) => {
+    let html = '';
+   errorList.map( error => {
+     if(error.error == 'min_answers_number'){
+       html += `<li>${this.state.labels["pages.quiz.question"]} - ${error.questionNr}: ${this.state.labels["pages.quiz.min_answers"] + window.minAnswers}</li>`
+     }
+     return error;
+   })
+    return {__html: html};
+  }
+
 
   render() {
     if(!this.state.items){
@@ -115,6 +138,17 @@ export default class DroppableComponent extends Component{
                     {this.state.labels && this.state.labels["pages.quiz.add_new_profile"]}
                   </button>
                 </div>
+            }
+            { this.state.errors && this.state.errors.length && this.state.errors != '[]'  ?
+              <ErrorMessage type='error' show={true}>
+                'Ops!'
+                <ul dangerouslySetInnerHTML={this.  createErrorMessage(this.state.errors)}>
+                  
+                </ul>
+              </ErrorMessage>
+              :
+              null
+
             }
           </div>
         )}

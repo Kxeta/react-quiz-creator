@@ -3,7 +3,6 @@ import { Provider } from 'mobx-react';
 import './styles/main.scss';
 import { DragDropComponent, ImageUploader } from './components';
 import { QuizStore } from './modules';
-import { ErrorMessage } from './components/error';
 
 
 
@@ -27,6 +26,10 @@ export default class Profiles extends Component {
 
     window.getJSONProfiles = this.getJSONProfiles;
     window.getStringfiedJSONProfiles = this.getStringfiedJSONProfiles;
+
+    if(!window.minAnswers){
+      window.minAnswers = 1;
+    }
     // this.updateProfilesStateJSON(this.getContentProfilesJSON());
     this.updateLabels(this.getLabelsJSON());
    }
@@ -40,7 +43,7 @@ export default class Profiles extends Component {
   }
 
   getStringfiedJSONProfiles = () =>{
-    return QuizStore.getStringfiedJSONProfiles();
+    return QuizStore.getStringfiedJSONProfiles();   
   }
 
   updateLabels = (labels) => {
@@ -53,6 +56,7 @@ export default class Profiles extends Component {
     const json = {
       "pages.quiz.add_new_question": "Adicionar nova pergunta",
       "pages.quiz.new_question": "Nova pergunta",
+      "pages.quiz.question": "Pergunta ",
       "pages.quiz.add_new_answer": "Adicionar nova resposta",
       "pages.quiz.new_answer": "Nova resposta",
       "pages.quiz.add_new_profile": "Adicionar nova perfil",
@@ -64,7 +68,8 @@ export default class Profiles extends Component {
       "general.duplicate": "Duplicar",
       "general.change": "Trocar",
       "pages.quiz.insert_image": "Inserir imagem",
-      "pages.quiz.send_image": "Enviar imagem",
+    "pages.quiz.send_image": "Enviar imagem",
+    "pages.quiz.min_answers": "O mínimo de respostas para as perguntas deste quiz é de: ",
       "pages.quiz.insert_image_tip_1": "Quando o usuário concluir o Quiz e se encaixar neste Perfil, essa é a imagem que aparecerá em seu resultado.",
       "pages.quiz.insert_image_tip_2": "Dica: utilize fotos que se encaixem no contexto ou crie uma imagem customizada.",
       "pages.quiz.insert_image_tip_3": "Tamanho Máximo: 2Mb",
@@ -121,7 +126,6 @@ export default class Profiles extends Component {
           <div>
             <DragDropComponent labels={this.state.labels} type='profiles' items={ QuizStore } droppableId='profiles-droppable'/>
             <button className='btn' onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.getJSONProfiles(); } }>Get Json!</button>
-            <ErrorMessage type='error' show={true}>Teste mensagem</ErrorMessage>
           </div>
       </Provider>
     );

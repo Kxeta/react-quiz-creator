@@ -46,7 +46,7 @@ export default class DraggableQuizComponent extends Component{
         <div className='bottom-actions'>
           <Checkbox label={this.state.labels && this.state.labels["pages.quiz.correct_answer"]} isChecked={item.correct} className={`correct-answer-${item.questionId}`} questionId={item.questionId} answerId={item.id}/>
           <div className='actions-wrapper'>
-            <button className='btn btn-quiz-action remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeAnswer();}}><i class="button-icon glyphicon glyphicon-trash" /> {this.state.labels && this.state.labels["general.remove"]}</button>
+            <button className='btn btn-quiz-action remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeAnswer();}}><i className="button-icon glyphicon glyphicon-trash" /> {this.state.labels && this.state.labels["general.remove"]}</button>
           </div>  
         </div>  
       );
@@ -56,8 +56,8 @@ export default class DraggableQuizComponent extends Component{
         <div className='bottom-actions bottom-actions-card'>
           <Checkbox label={this.state.labels && this.state.labels["general.mandatory"]} isChecked={item.required} className='required-question' questionId={item.id}/>
           <div className='actions-wrapper'>
-            <button className='btn btn-quiz-action remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeQuestion();}}><i class="button-icon glyphicon glyphicon-trash" /> {this.state.labels && this.state.labels["general.remove"]}</button>
-            <button className='btn btn-quiz-action duplicate-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.duplicateQuestion();}}><i class="button-icon glyphicon glyphicon-duplicate" /> {this.state.labels && this.state.labels["general.duplicate"]}</button>
+            <button className='btn btn-quiz-action remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeQuestion();}}><i className="button-icon glyphicon glyphicon-trash" /> {this.state.labels && this.state.labels["general.remove"]}</button>
+            <button className='btn btn-quiz-action duplicate-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.duplicateQuestion();}}><i className="button-icon glyphicon glyphicon-duplicate" /> {this.state.labels && this.state.labels["general.duplicate"]}</button>
           </div>  
         </div>
       );

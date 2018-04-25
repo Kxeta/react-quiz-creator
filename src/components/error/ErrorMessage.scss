@@ -4,10 +4,10 @@
   right: 9px;
   min-width: 300px;
   opacity: 0;
-  transition: opacity 500ms ease;
+  transition: opacity 500ms ease, z-index 800ms ease;
   z-index: -1;
   &.active{
-    z-index: inherit;
+    z-index: 1500;
     opacity: 1;
   }
   &.quiz-message-success{
@@ -45,6 +45,6 @@
   color: white;
   font-size: 10px;
   position: absolute;
-  right: 2px;
+  right: 0;
   top: 2px;
 }

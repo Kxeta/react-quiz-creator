@@ -27,6 +27,10 @@ export default class Questions extends Component {
 
     window.getQuizStateJSON = this.getJSONQuiz;
     window.getQuizStateStringifiedJSON = this.getStringfiedJSONQuiz;
+
+    if(!window.minAnswers){
+      window.minAnswers = 1;
+    }
     // this.updateQuizStateJSON(this.getContentJSON());
     this.updateLabels(this.getLabelsJSON());
    }
@@ -51,6 +55,7 @@ export default class Questions extends Component {
   getLabelsJSON = () => {
     const json = {
       "pages.quiz.add_new_question": "Adicionar nova pergunta",
+      "pages.quiz.question": "Pergunta ",
       "pages.quiz.new_question": "Nova pergunta",
       "pages.quiz.add_new_answer": "Adicionar nova resposta",
       "pages.quiz.new_answer": "Nova resposta",
@@ -64,6 +69,7 @@ export default class Questions extends Component {
       "general.change": "Trocar",
       "pages.quiz.insert_image": "Inserir imagem",
       "pages.quiz.send_image": "Enviar imagem",
+      "pages.quiz.min_answers": "O mínimo de respostas para as perguntas deste quiz é de: ",
       "pages.quiz.insert_image_tip_1": "Quando o usuário concluir o Quiz e se encaixar neste Perfil, essa é a imagem que aparecerá em seu resultado.",
       "pages.quiz.insert_image_tip_2": "Dica: utilize fotos que se encaixem no contexto ou crie uma imagem customizada.",
       "pages.quiz.insert_image_tip_3": "Tamanho Máximo: 2Mb",

@@ -19,7 +19,7 @@ export default class DraggableProfileComponent extends Component{
     super(props);
     this.state = {
       item: this.props.item,
-      labels: this.props.labels
+      labels: this.props.labels,
     };
   }
 
@@ -41,8 +41,8 @@ export default class DraggableProfileComponent extends Component{
     let item = this.state.item;
     return (
       <div className='actions-wrapper action-wrapper-profile'>
-        <button className='btn btn-quiz-action remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeProfile();}}><i class="button-icon glyphicon glyphicon-trash" /> {this.state.labels && this.state.labels["general.remove"]}</button>
-        <button className='btn btn-quiz-action duplicate-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.duplicateProfile();}}><i class="button-icon glyphicon glyphicon-duplicate" /> {this.state.labels && this.state.labels["general.duplicate"]}</button>
+        <button className='btn btn-quiz-action remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeProfile();}}><i className="button-icon glyphicon glyphicon-trash" /> {this.state.labels && this.state.labels["general.remove"]}</button>
+        <button className='btn btn-quiz-action duplicate-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.duplicateProfile();}}><i className="button-icon glyphicon glyphicon-duplicate" /> {this.state.labels && this.state.labels["general.duplicate"]}</button>
       </div>  
     );
   }

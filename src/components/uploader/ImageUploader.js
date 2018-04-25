@@ -3,8 +3,6 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import './ImageUploader.scss';
 
-import noImage from '../../images/no-img.svg';
-
 export default class ImageUploader extends Component {
   static propTypes = { 
     onChange: PropTypes.func,
@@ -116,7 +114,12 @@ export default class ImageUploader extends Component {
   } else {
     $imagePreview = (
       <div>
-        <img src={noImage} />
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="28" viewBox="0 0 36 28">
+            <g fill="#9BA5AF" fill-rule="nonzero">
+                <path d="M0 0v28h36V0H0zm.973 21.314l10.275-10.21 7.842 7.786-2.963 2.936.686.685 5.736-5.682 10.284 10.205H.973v-5.72zm34.054 5.72h-.817L22.534 15.448l-2.773 2.747-8.513-8.448-10.275 10.2V.967h34.054v26.068z"/>
+                <path d="M29.758 8.475a2.759 2.759 0 0 0 2.55-1.691 2.722 2.722 0 0 0-.6-2.984 2.774 2.774 0 0 0-3.009-.59A2.737 2.737 0 0 0 27 5.742a2.748 2.748 0 0 0 2.758 2.733zm0-4.505c.986 0 1.786.794 1.786 1.772 0 .979-.8 1.772-1.786 1.772a1.779 1.779 0 0 1-1.785-1.772c0-.47.188-.92.523-1.253a1.792 1.792 0 0 1 1.262-.519z"/>
+            </g>
+        </svg>
         <p>{this.state.labels && this.state.labels["pages.quiz.send_image"]}</p>
       </div>);
     }
