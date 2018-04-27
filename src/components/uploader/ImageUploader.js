@@ -120,7 +120,7 @@ export default class ImageUploader extends Component {
                 <path d="M29.758 8.475a2.759 2.759 0 0 0 2.55-1.691 2.722 2.722 0 0 0-.6-2.984 2.774 2.774 0 0 0-3.009-.59A2.737 2.737 0 0 0 27 5.742a2.748 2.748 0 0 0 2.758 2.733zm0-4.505c.986 0 1.786.794 1.786 1.772 0 .979-.8 1.772-1.786 1.772a1.779 1.779 0 0 1-1.785-1.772c0-.47.188-.92.523-1.253a1.792 1.792 0 0 1 1.262-.519z"/>
             </g>
         </svg>
-        <p>{this.state.labels && this.state.labels["pages.quiz.send_image"]}</p>
+        <p>{this.state.labels && this.state.labels["general.send_image"]}</p>
       </div>);
     }
 

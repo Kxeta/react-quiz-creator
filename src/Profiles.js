@@ -73,7 +73,7 @@ export default class Profiles extends Component {
       "general.duplicate": "Duplicar",
       "general.change": "Trocar",
       "pages.quiz.insert_image": "Inserir imagem",
-      "pages.quiz.send_image": "Enviar imagem",
+      "general.send_image": "Enviar imagem",
       "pages.quiz.min_answers": "O mínimo de respostas para as perguntas deste quiz é de: ",
       "pages.quiz.insert_image_tip_1": "Quando o usuário concluir o Quiz e se encaixar neste Perfil, essa é a imagem que aparecerá em seu resultado.",
       "pages.quiz.insert_image_tip_2": "Dica: utilize fotos que se encaixem no contexto ou crie uma imagem customizada.",

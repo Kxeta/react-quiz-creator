@@ -44,6 +44,14 @@ class QuizStore {
   }
 
   set profiles (profiles) {
+    let profileId = '';
+    for(let i in profiles){
+      profiles[i].order = parseInt(i) + 1;
+      if(!profiles[i].id){
+        profileId = "new_" + Math.floor(Math.random()*100*Math.random()*5);
+        profiles[i].id = profileId;
+      }
+    }
     this._profiles = JSON.stringify(profiles);
   }
   
@@ -122,6 +130,9 @@ class QuizStore {
     this.errors = errors;
     console.log(this.quiz, quizJson, errors);
     let responseJSON =  errors.length ? null : quizJson;
+    if(responseJSON){
+      this.quiz = []
+    }
     return responseJSON;
   }
 
@@ -165,6 +176,9 @@ class QuizStore {
 
     window.minAnswers = profilesJson.length ? profilesJson.length : 1;
     let responseJSON  = errors.length ? null : profilesJson;
+    if(responseJSON){
+      this.profiles = []
+    }
     return responseJSON;
   }
 
