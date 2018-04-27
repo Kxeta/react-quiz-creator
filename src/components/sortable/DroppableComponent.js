@@ -26,6 +26,10 @@ export default class DroppableComponent extends Component{
       PropTypes.array,
       PropTypes.object
     ]),
+    configs: PropTypes.oneOfType([
+      PropTypes.array,
+      PropTypes.object
+    ]),
     errors: PropTypes.oneOfType([
       PropTypes.array,
       PropTypes.object,
@@ -45,6 +49,7 @@ export default class DroppableComponent extends Component{
     this.state = {
       items: this.props.items,
       labels: this.props.labels,
+      configs: this.props.configs,
       errors: this.props.errors
     };
   }
@@ -56,6 +61,9 @@ export default class DroppableComponent extends Component{
     if(JSON.stringify(this.state.labels) != JSON.stringify(nextProps.labels)){
       this.setState({labels: nextProps.labels});
     }
+    if(JSON.stringify(this.state.configs) != JSON.stringify(nextProps.configs)){
+      this.setState({configs: nextProps.configs});
+    }
     if(JSON.stringify(this.state.errors) != JSON.stringify(nextProps.errors)){
       this.setState({errors: nextProps.errors});
     }
@@ -64,6 +72,7 @@ export default class DroppableComponent extends Component{
   shouldComponentUpdate(nextProps, nextState) {
     return (JSON.stringify(this.state.items) != JSON.stringify(nextState.items) ||
             JSON.stringify(this.state.errors) != JSON.stringify(nextState.errors) ||
+            JSON.stringify(this.state.configs) != JSON.stringify(nextState.configs) ||
             JSON.stringify(this.state.labels) != JSON.stringify(nextProps.labels));
   }
 
@@ -72,7 +81,7 @@ export default class DroppableComponent extends Component{
    errorList.map( error => {
      switch (error.error){
        case 'min_answers_number':
-        html += `<li>${this.state.labels["pages.quiz.question"]} - ${error.questionNr}: ${this.state.labels["pages.quiz.min_answers"] + window.minAnswers}</li>`;
+        html += `<li>${this.state.labels["pages.quiz.question"]} - ${error.questionNr}: ${this.state.labels["pages.quiz.min_answers"] + this.state.configs[minAnswers]}</li>`;
         break;
       case 'no_questions':
         html += `<li>${this.state.labels["pages.quiz.no_questions"]}</li>`;
@@ -95,6 +104,7 @@ export default class DroppableComponent extends Component{
     }
     let lastItemId = -1;
     let quizId = null;
+    let isProfile = this.state.configs.isProfile;
     if(this.state.items.length){
       lastItemId = this.state.items[this.state.items.length - 1].id;
       quizId = this.state.items[this.state.items.length - 1].quizId;
@@ -118,7 +128,7 @@ export default class DroppableComponent extends Component{
               {this.state.items.map((item, index) => {
                 if(this.props.componentFormat == 'quiz'){
                   return(
-                    <DraggableQuizComponent labels={this.state.labels} type={ this.props.type } item={ item } index={ index } itemsQuantity={this.state.items.length} lastItem={ (this.state.items.length-1) == index}></DraggableQuizComponent>
+                    <DraggableQuizComponent configs={this.state.configs} labels={this.state.labels} type={ this.props.type } item={ item } index={ index } itemsQuantity={this.state.items.length} lastItem={ (this.state.items.length-1) == index}></DraggableQuizComponent>
                   )
                 }
                 else{
@@ -140,7 +150,7 @@ export default class DroppableComponent extends Component{
                       </button>
                     </div>
                     :
-                    window.minAnswers > 1 ?
+                    isProfile ?
                     null
                     : 
                     <button className='btn btn-add-new-component add-new-answer' onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addAnswer(this.props.questionId);}}><i className='glyphicon glyphicon-plus'></i>{this.state.labels && this.state.labels["pages.quiz.add_new_answer"]}</button>

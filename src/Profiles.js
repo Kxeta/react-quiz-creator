@@ -11,25 +11,23 @@ export default class Profiles extends Component {
   constructor(props){
     super(props);
     this.state = {
-      items: [],
-      labels: {}
+      items: []
     }
     if(window){
       window.updateProfilesStateJSON = this.updateProfilesStateJSON;
       window.updateLabels = this.updateLabels;
+      window.setConfigs = this.updateConfigs;
     }
   }
 
   componentDidMount() {
     window.updateProfilesStateJSON = this.updateProfilesStateJSON;
     window.updateLabels = this.updateLabels;
+    window.setConfigs = this.updateConfigs;
 
     window.getJSONProfiles = this.getJSONProfiles;
     window.getStringfiedJSONProfiles = this.getStringfiedJSONProfiles;
 
-    if(!window.minAnswers){
-      window.minAnswers = 1;
-    }
     // this.updateProfilesStateJSON(this.getContentProfilesJSON());
     this.updateLabels(this.getLabelsJSON());
    }
@@ -52,9 +50,11 @@ export default class Profiles extends Component {
   }
 
   updateLabels = (labels) => {
-    this.setState({
-      labels
-    });
+    QuizStore.labels = labels;
+  }
+
+  updateConfigs = (configs) => {
+    QuizStore.configs = configs;
   }
 
   getLabelsJSON = () => {
@@ -132,7 +132,7 @@ export default class Profiles extends Component {
     return (
         <Provider QuizStore = { QuizStore }>
           <div>
-            <DragDropComponent labels={this.state.labels} type='profiles' items={ QuizStore } droppableId='profiles-droppable'/>
+            <DragDropComponent type='profiles' items={ QuizStore } droppableId='profiles-droppable'/>
             <button className='btn' onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.getJSONProfiles(); } }>Get Json!</button>
           </div>
       </Provider>

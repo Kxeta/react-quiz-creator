@@ -5,6 +5,9 @@ class QuizStore {
   @observable items = '[]';
   @observable _profiles = '[]';
   @observable errors = '[]';
+  @observable _labels = '[]';
+  @observable _configs = '{}';
+
   
   //Store
   set quiz (items) {
@@ -15,7 +18,7 @@ class QuizStore {
         questionId = "new_" + Math.floor(Math.random()*100*Math.random()*5);
         items[i].id = questionId;
       }
-      if(items[i].answers.length){
+      if(items[i] && items[i].answers.length){
         for(let j in items[i].answers){
           items[i].answers[j].order = parseInt(j) + 1;
           if(!items[i].answers[j].id){
@@ -23,12 +26,12 @@ class QuizStore {
             items[i].answers[j].questionId = questionId;
           }
         }
-        for(let d = 0; d < window.minAnswers - items[i].answers.length; d++){
+        for(let d = 0; d < this.configs.minAnswers - items[i].answers.length; d++){
           this.addAnswer(items[i].id);
         }
       }
       else{
-        for(let d = 0; d < window.minAnswers; d++){
+        for(let d = 0; d < this.configs.minAnswers; d++){
           this.addAnswer(items[i].id);
         }
       }
@@ -66,6 +69,22 @@ class QuizStore {
   get errors () {
     return JSON.parse(this.errors);
   }
+
+  set labels (labels) {
+    this._labels = JSON.stringify(labels);
+  }
+
+  get labels () {
+    return JSON.parse(this._labels);
+  }
+
+  set configs (configs) {
+    this._configs = JSON.stringify(configs);
+  }
+
+  get configs () {
+    return JSON.parse(this._configs);
+  }
   
   //Create JSON return to send to the back-end
   
@@ -95,7 +114,6 @@ class QuizStore {
             }
           }
           let answers = quizJsonCopy[i].answers.filter( answer => !answer.deleted);
-          console.log('resultado',answers);
           if(answers.length == 0){
             quizJsonCopy[i].deleted = true;
           }
@@ -113,7 +131,7 @@ class QuizStore {
     let errors = [];
     if(quizJson.length){
       for(let i in quizJson){
-        if(quizJson[i].answers.length < window.minAnswers){
+        if(quizJson[i].answers.length < this.configs.minAnswers){
           let question = parseInt(i) + 1;
           errors.push({
             'questionNr': question,
@@ -141,7 +159,20 @@ class QuizStore {
     return JSON.stringify(quizJson);
   }
   getNotValidatedStringfiedJSONQuiz() {
-    let quizJson = this.quiz;
+    let quizJson = JSON.parse(JSON.stringify(this.quiz));
+    for(let i in quizJson){
+      if(String(quizJson[i].id).indexOf('new_') > -1){
+        quizJson[i].id = null;
+      }
+      if(quizJson[i].answers.length){
+        for(let j in quizJson[i].answers){
+          if(String(quizJson[i].answers[j].id).indexOf('new_') > -1){
+            quizJson[i].answers[j].id = null;
+            quizJson[i].answers[j].questionId = quizJson[i].id;
+          }
+        }
+      }
+    }
     return JSON.stringify(quizJson);
   }
 
@@ -174,7 +205,10 @@ class QuizStore {
     
     console.log(this.profiles, profilesJson, errors);
 
-    window.minAnswers = profilesJson.length ? profilesJson.length : 1;
+    this.configs = {
+      isProfile: true,
+      minAnswers: profilesJson.length ? profilesJson.length : 1
+    }
     let responseJSON  = errors.length ? null : profilesJson;
     if(responseJSON){
       this.profiles = []
@@ -188,7 +222,20 @@ class QuizStore {
   }
 
   getNotValidatedStringfiedJSONProfiles() {
-    let profilesJson = this.profiles;
+    let profilesJson = JSON.parse(JSON.stringify(this.profiles));
+    for(let i in profilesJson){
+      if(String(profilesJson[i].id).indexOf('new_') > -1){
+        profilesJson[i].id = null;
+      }
+      if(profilesJson[i].answers.length){
+        for(let j in profilesJson[i].answers){
+          if(String(profilesJson[i].answers[j].id).indexOf('new_') > -1){
+            profilesJson[i].answers[j].id = null;
+            profilesJson[i].answers[j].questionId = profilesJson[i].id;
+          }
+        }
+      }
+    }
     return JSON.stringify(profilesJson);
   }
   
@@ -287,7 +334,7 @@ class QuizStore {
   addQuestion(quizId, prevQuestionId = 0){    
     let newQuestionId = "new_" + Math.floor(Math.random()*100*Math.random()*5);
     let answers = []
-    for(let i = 0; i < window.minAnswers; i++){
+    for(let i = 0; i < this.configs.minAnswers; i++){
       let correct = i == 0 ? true : false;
       let newAnswer = { 
         "id":"new_" + Math.floor(Math.random()*100*Math.random()*5),
@@ -331,8 +378,11 @@ class QuizStore {
     }
     let modQuiz = this.quiz;
     let questionIndex = modQuiz.findIndex((item) => {return item.id === questionId});
-    modQuiz[questionIndex].answers.push(newAnswer);
-    
+    if(questionIndex > -1){
+      if(this.configs.isProfile && modQuiz[questionIndex].answers.length < this.configs.minAnswers){
+        modQuiz[questionIndex].answers.push(newAnswer);
+      }
+    }    
     this.quiz = modQuiz;
   }
 
@@ -377,8 +427,8 @@ class QuizStore {
     let modQuiz = this.quiz;
     let questionIndex = modQuiz.findIndex((item) => {return item.id === questionId});
     const result = Array.from(modQuiz[questionIndex].answers);
-    if(window && window.minAnswers){
-      minAnswers = window.minAnswers;
+    if(this.configs.minAnswers){
+      minAnswers = this.configs.minAnswers;
     }
     if(modQuiz[questionIndex].answers.length > minAnswers){
       let answerIndex = result.findIndex((item) => {return item.id === id});
@@ -387,7 +437,6 @@ class QuizStore {
     }
     else{
       let question = questionIndex + 1;
-      console.log(question);
       errors.push({
         'questionNr': question,
         'error': 'min_answers_number'

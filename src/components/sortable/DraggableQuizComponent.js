@@ -16,6 +16,10 @@ export default class DraggableQuizComponent extends Component{
       PropTypes.array,
       PropTypes.object
     ]),
+    configs: PropTypes.oneOfType([
+      PropTypes.array,
+      PropTypes.object
+    ]),
   };
 
   constructor(props) {
@@ -23,8 +27,8 @@ export default class DraggableQuizComponent extends Component{
     this.state = {
       item: this.props.item,
       labels: this.props.labels,
+      configs: this.props.configs,
       itemsQuantity: this.props.itemsQuantity,
-      
     };
   }
 
@@ -35,6 +39,9 @@ export default class DraggableQuizComponent extends Component{
     if(JSON.stringify(this.state.labels) != JSON.stringify(nextProps.labels)){
       this.setState({labels: nextProps.labels});
     }
+    if(JSON.stringify(this.state.configs) != JSON.stringify(nextProps.configs)){
+      this.setState({configs: nextProps.configs});
+    }
     if(this.state.itemsQuantity != nextProps.itemsQuantity){
       this.setState({itemsQuantity: nextProps.itemsQuantity});
     }
@@ -43,6 +50,7 @@ export default class DraggableQuizComponent extends Component{
   shouldComponentUpdate(nextProps, nextState){
     return (JSON.stringify(this.state.item) != JSON.stringify(nextState.item) ||
            (JSON.stringify(this.state.labels) != JSON.stringify(nextProps.labels)) ||
+           (JSON.stringify(this.state.configs) != JSON.stringify(nextProps.configs)) ||
            (this.state.itemsQuantity != nextProps.itemsQuantity));
   }
 
@@ -53,7 +61,7 @@ export default class DraggableQuizComponent extends Component{
         <div className='bottom-actions'>
           <Checkbox label={this.state.labels && this.state.labels["pages.quiz.correct_answer"]} isChecked={item.correct} className={`correct-answer-${item.questionId}`} questionId={item.questionId} answerId={item.id}/>
           <div className='actions-wrapper'>
-            <button className='btn btn-quiz-action remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeAnswer();}} disabled={this.props.itemsQuantity <= 1 || window.minAnswers > 1}><i className="button-icon glyphicon glyphicon-trash" /> {this.state.labels && this.state.labels["general.remove"]}</button>
+            <button className='btn btn-quiz-action remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeAnswer();}} disabled={this.props.itemsQuantity <= 1 || this.props.configs.isProfile}><i className="button-icon glyphicon glyphicon-trash" /> {this.state.labels && this.state.labels["general.remove"]}</button>
           </div>  
         </div>  
       );
@@ -101,7 +109,7 @@ export default class DraggableQuizComponent extends Component{
   }
 
   renderAnswers = (answers, questionId) => {
-    return(<DroppableComponent labels={this.state.labels} questionId={questionId} componentFormat={'quiz'} key={`answer-${questionId}`} type={`answer-${questionId}`} items={answers} droppableId={`answer-droppable-${questionId}`}/>)    
+    return(<DroppableComponent configs={this.state.configs} labels={this.state.labels} questionId={questionId} componentFormat={'quiz'} key={`answer-${questionId}`} type={`answer-${questionId}`} items={answers} droppableId={`answer-droppable-${questionId}`}/>)    
     // return false;
   }
 
@@ -136,7 +144,7 @@ export default class DraggableQuizComponent extends Component{
               <div className='rc-quiz-content-wrapper'>
                 <li className={'rc-quiz-content ' + type}>
                   <QuizEditorComponent placeholder={placeholder} content={item.text} className={customClassName} type={type} parentId={item.questionId} id={item.id} ></QuizEditorComponent>
-                  { item.answers && item.answers.length ? 
+                  { item && item.answers && item.answers.length ? 
                     this.renderAnswers(item.answers, item.id)
                     :
                     null

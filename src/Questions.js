@@ -11,12 +11,12 @@ export default class Questions extends Component {
   constructor(props){
     super(props);
     this.state = {
-      items: [],
-      labels: {}
+      items: []
     }
     if(window){
       window.updateQuizStateJSON = this.updateQuizStateJSON;
       window.updateLabels = this.updateLabels;
+      window.setConfigs = this.updateConfigs;
       window.getQuizStateJSON = this.getQuizStateJSON;
     }
   }
@@ -24,15 +24,13 @@ export default class Questions extends Component {
   componentDidMount() {
     window.updateQuizStateJSON = this.updateQuizStateJSON;
     window.updateLabels = this.updateLabels;
+    window.setConfigs = this.updateConfigs;
 
     window.getQuizStateJSON = this.getJSONQuiz;
     window.getQuizStateStringifiedJSON = this.getStringfiedJSONQuiz;
-
-    if(!window.minAnswers){
-      window.minAnswers = 1;
-    }
     // this.updateQuizStateJSON(this.getContentJSON());
     this.updateLabels(this.getLabelsJSON());
+    this.updateConfigs({ isProfile: false, minAnswers: 1});
    }
 
   getQuizStateJSON = () =>{
@@ -51,10 +49,13 @@ export default class Questions extends Component {
   updateQuizStateJSON = (items) => {
     QuizStore.quiz = items;
   }
+
   updateLabels = (labels) => {
-    this.setState({
-      labels
-    });
+    QuizStore.labels = labels;
+  }
+
+  updateConfigs = (configs) => {
+    QuizStore.configs = configs;
   }
 
   getLabelsJSON = () => {
@@ -149,7 +150,7 @@ export default class Questions extends Component {
     return (
       <Provider QuizStore = { QuizStore }>
         <div>
-          <DragDropComponent labels={this.state.labels} type='question' items={ QuizStore } droppableId='question-droppable'/>
+          <DragDropComponent type='question' items={ QuizStore } droppableId='question-droppable'/>
           <button className='btn' onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.getJSONQuiz(); } }>Get Json!</button>
         </div>
       </Provider>

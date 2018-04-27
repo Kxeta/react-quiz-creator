@@ -23,11 +23,7 @@ export default class DragDropComponent extends Component{
   static propTypes = { 
     QuizStore: PropTypes.object,
     type: PropTypes.string,
-    droppableId: PropTypes.string,
-    labels: PropTypes.oneOf(
-      PropTypes.array,
-      PropTypes.object
-    )
+    droppableId: PropTypes.string
   };
 
   constructor(props) {
@@ -91,7 +87,7 @@ export default class DragDropComponent extends Component{
     }
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        <DroppableComponent labels={this.props.labels} errors={this.props.QuizStore.errors} type={ this.props.type } componentFormat={componentFormat} items={items} droppableId={ this.props.droppableId }>
+        <DroppableComponent configs={this.props.QuizStore.configs} labels={this.props.QuizStore.labels} errors={this.props.QuizStore.errors} type={ this.props.type } componentFormat={componentFormat} items={items} droppableId={ this.props.droppableId }>
         </DroppableComponent>
       </DragDropContext>
     );
