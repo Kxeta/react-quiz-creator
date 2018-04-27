@@ -23,7 +23,18 @@ class QuizStore {
             items[i].answers[j].questionId = questionId;
           }
         }
+        for(let d = 0; d < window.minAnswers - items[i].answers.length; d++){
+          this.addAnswer(items[i].id);
+        }
       }
+      else{
+        for(let d = 0; d < window.minAnswers; d++){
+          this.addAnswer(items[i].id);
+        }
+      }
+    }
+    if(!items.length){
+      this.addQuestion(null);
     }
     this.items = JSON.stringify(items);
   }
@@ -51,78 +62,119 @@ class QuizStore {
   //Create JSON return to send to the back-end
   
   getJSONQuiz() {
-    let quizJson = this.quiz;
-    for(let i in quizJson){
-      if(quizJson[i].text.length){
-        quizJson[i].order = parseInt(i) + 1;
-        if(String(quizJson[i].id).indexOf('new_') > -1){
-          quizJson[i].id = null;
+    let quizJsonCopy = JSON.parse(JSON.stringify(this.quiz));
+    for(let i in quizJsonCopy){
+      let text = quizJsonCopy[i].text
+      text = text.replace(/<(?:.|\n)*?>/gm, '').trim();
+      if(quizJsonCopy[i].text.length && text.length){
+        quizJsonCopy[i].order = parseInt(i) + 1;
+        if(String(quizJsonCopy[i].id).indexOf('new_') > -1){
+          quizJsonCopy[i].id = null;
         }
-        if(quizJson[i].answers.length){
-          for(let j in quizJson[i].answers){
-            if(quizJson[i].answers[j].text.length){
-              quizJson[i].answers[j].order = parseInt(j) + 1;
-              if(String(quizJson[i].answers[j].id).indexOf('new_') > -1){
-                quizJson[i].answers[j].id = null;
-                quizJson[i].answers[j].questionId = quizJson[i].id;
+        if(quizJsonCopy[i].answers.length){
+          for(let j in quizJsonCopy[i].answers){
+            let text = quizJsonCopy[i].answers[j].text
+            text = text.replace(/<(?:.|\n)*?>/gm, '').trim();
+            if(quizJsonCopy[i].answers[j].text.length && text.length){
+              quizJsonCopy[i].answers[j].order = parseInt(j) + 1;
+              if(String(quizJsonCopy[i].answers[j].id).indexOf('new_') > -1){
+                quizJsonCopy[i].answers[j].id = null;
+                quizJsonCopy[i].answers[j].questionId = quizJsonCopy[i].id;
               }
             }
             else{
-              quizJson[i].answers.splice(j,1);
+              quizJsonCopy[i].answers[j].deleted = true;
             }
           }
+          let answers = quizJsonCopy[i].answers.filter( answer => !answer.deleted);
+          console.log('resultado',answers);
+          if(answers.length == 0){
+            quizJsonCopy[i].deleted = true;
+          }
+          quizJsonCopy[i].answers = answers;
         }
         else{
-          quizJson.splice(i,1);
+          quizJsonCopy[i].deleted = true;
         }
       }
       else{
-        quizJson.splice(i,1);
+        quizJsonCopy[i].deleted = true;
       }
     }
+    let quizJson = quizJsonCopy.filter( question => !question.deleted);
     let errors = [];
-    for(let i in quizJson){
-      if(quizJson[i].answers.length < window.minAnswers){
-        let question = parseInt(i) + 1;
-        errors.push({
-          'questionNr': question,
-          'error': 'min_answers_number'
-        })
+    if(quizJson.length){
+      for(let i in quizJson){
+        if(quizJson[i].answers.length < window.minAnswers){
+          let question = parseInt(i) + 1;
+          errors.push({
+            'questionNr': question,
+            'error': 'min_answers_number'
+          })
+        }
       }
+    }
+    else{
+      errors.push({
+        'error': 'no_questions'
+      })
     }
     this.errors = errors;
-    console.log(errors);
-    return errors.length ? null : quizJson;
+    console.log(this.quiz, quizJson, errors);
+    let responseJSON =  errors.length ? null : quizJson;
+    return responseJSON;
   }
 
   getStringfiedJSONQuiz() {
     let quizJson = this.getJSONQuiz();
-    
+    return JSON.stringify(quizJson);
+  }
+  getNotValidatedStringfiedJSONQuiz() {
+    let quizJson = this.quiz;
     return JSON.stringify(quizJson);
   }
 
   getJSONProfiles() {
-    let profilesJson = this.profiles;
-    for(let i in profilesJson){
-      console.log(profilesJson[i].name.length && profilesJson[i].description.length, profilesJson[i].name.length, profilesJson[i].description.length)
-      if(profilesJson[i].name.length && profilesJson[i].description.length){
-        profilesJson[i].order = parseInt(i) + 1;
-        if(String(profilesJson[i].id).indexOf('new_') > -1){
-          profilesJson[i].id = null;
+    let profilesJsonCopy = JSON.parse(JSON.stringify(this.profiles));
+    for(let i in profilesJsonCopy){
+      let name = profilesJsonCopy[i].name
+      name = name.replace(/<(?:.|\n)*?>/gm, '').trim();
+      let description = profilesJsonCopy[i].description
+      description = description.replace(/<(?:.|\n)*?>/gm, '').trim();
+      if(profilesJsonCopy[i].name.length && name.length && profilesJsonCopy[i].description.length && description.length){
+        profilesJsonCopy[i].order = parseInt(i) + 1;
+        if(String(profilesJsonCopy[i].id).indexOf('new_') > -1){
+          profilesJsonCopy[i].id = null;
         }
       }
       else{
-        profilesJson.splice(i,1);
+        profilesJsonCopy[i].deleted = true;
       }
     }
+    let profilesJson = profilesJsonCopy.filter( profile => !profile.deleted);
+
+    let errors = [];
+    if(!profilesJson.length){
+      errors.push({
+        'error': 'no_profiles'
+      })
+    }
+    this.errors = errors;
     
-    console.log(this.profiles,profilesJson, profilesJson.length);
-    window.minAnswers = profilesJson.length;
-    return profilesJson;
+    console.log(this.profiles, profilesJson, errors);
+
+    window.minAnswers = profilesJson.length ? profilesJson.length : 1;
+    let responseJSON  = errors.length ? null : profilesJson;
+    return responseJSON;
   }
 
   getStringfiedJSONProfiles() {
     let profilesJson = this.getJSONProfiles()
+    return JSON.stringify(profilesJson);
+  }
+
+  getNotValidatedStringfiedJSONProfiles() {
+    let profilesJson = this.profiles;
     return JSON.stringify(profilesJson);
   }
   

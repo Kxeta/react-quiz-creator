@@ -70,8 +70,18 @@ export default class DroppableComponent extends Component{
   createErrorMessage = (errorList) => {
     let html = '';
    errorList.map( error => {
-     if(error.error == 'min_answers_number'){
-       html += `<li>${this.state.labels["pages.quiz.question"]} - ${error.questionNr}: ${this.state.labels["pages.quiz.min_answers"] + window.minAnswers}</li>`
+     switch (error.error){
+       case 'min_answers_number':
+        html += `<li>${this.state.labels["pages.quiz.question"]} - ${error.questionNr}: ${this.state.labels["pages.quiz.min_answers"] + window.minAnswers}</li>`;
+        break;
+      case 'no_questions':
+        html += `<li>${this.state.labels["pages.quiz.no_questions"]}</li>`;
+        break;
+      case 'no_profiles':
+        html += `<li>${this.state.labels["pages.quiz.no_profiles"]}</li>`;
+        break;
+      default:
+        break;
      }
      return error;
    })
@@ -108,7 +118,7 @@ export default class DroppableComponent extends Component{
               {this.state.items.map((item, index) => {
                 if(this.props.componentFormat == 'quiz'){
                   return(
-                    <DraggableQuizComponent labels={this.state.labels} type={ this.props.type } item={ item } index={ index } lastItem={ (this.state.items.length-1) == index}></DraggableQuizComponent>
+                    <DraggableQuizComponent labels={this.state.labels} type={ this.props.type } item={ item } index={ index } itemsQuantity={this.state.items.length} lastItem={ (this.state.items.length-1) == index}></DraggableQuizComponent>
                   )
                 }
                 else{
@@ -130,7 +140,10 @@ export default class DroppableComponent extends Component{
                       </button>
                     </div>
                     :
-                      <button className='btn btn-add-new-component add-new-answer' onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addAnswer(this.props.questionId);}}><i className='glyphicon glyphicon-plus'></i>{this.state.labels && this.state.labels["pages.quiz.add_new_answer"]}</button>
+                    window.minAnswers > 1 ?
+                    null
+                    : 
+                    <button className='btn btn-add-new-component add-new-answer' onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addAnswer(this.props.questionId);}}><i className='glyphicon glyphicon-plus'></i>{this.state.labels && this.state.labels["pages.quiz.add_new_answer"]}</button>
                 :
                 <div className='new-component-card'>
                   <button className='btn btn-add-new-component add-new-question' onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.addProfile(quizId);}}>
@@ -141,10 +154,8 @@ export default class DroppableComponent extends Component{
             }
             { this.state.errors && this.state.errors.length && this.state.errors != '[]'  ?
               <ErrorMessage type='error' show={true}>
-                'Ops!'
-                <ul dangerouslySetInnerHTML={this.  createErrorMessage(this.state.errors)}>
-                  
-                </ul>
+                {this.state.labels["general.we_had_problems"]}
+                <ul dangerouslySetInnerHTML={this.  createErrorMessage(this.state.errors)}></ul>
               </ErrorMessage>
               :
               null

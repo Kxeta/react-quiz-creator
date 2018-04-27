@@ -39,8 +39,13 @@ export default class Questions extends Component {
     return QuizStore.getJSONQuiz();
   }
 
-  getStringfiedJSONQuiz = () =>{
-    return QuizStore.getStringfiedJSONQuiz();
+  getStringfiedJSONQuiz = (validate = true) =>{
+    if(validate){
+      return QuizStore.getStringfiedJSONQuiz();
+    }
+    else{
+      return QuizStore.getNotValidatedStringfiedJSONQuiz();
+    }
   }
   
   updateQuizStateJSON = (items) => {
@@ -73,6 +78,9 @@ export default class Questions extends Component {
       "pages.quiz.insert_image_tip_1": "Quando o usuário concluir o Quiz e se encaixar neste Perfil, essa é a imagem que aparecerá em seu resultado.",
       "pages.quiz.insert_image_tip_2": "Dica: utilize fotos que se encaixem no contexto ou crie uma imagem customizada.",
       "pages.quiz.insert_image_tip_3": "Tamanho Máximo: 2Mb",
+      "pages.quiz.no_questions": "Não é possível cadastrar um quiz sem nenhuma pergunta ou com respostas vazias",
+      "pages.quiz.no_profiles": "Não é possível cadastrar um quiz de perfil sem nenhum perfil ou com conteúdo vazio",
+      "general.we_had_problems": "Encontramos o(s) seguinte(s) problema(s):",
     }
     return json;
   }

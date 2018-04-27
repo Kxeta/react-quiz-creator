@@ -10,6 +10,7 @@ export default class DraggableQuizComponent extends Component{
   static propTypes = { 
     item: PropTypes.object,
     index: PropTypes.number,
+    itemsQuantity: PropTypes.number,
     lastItem: PropTypes.bool,
     labels: PropTypes.oneOfType([
       PropTypes.array,
@@ -21,7 +22,9 @@ export default class DraggableQuizComponent extends Component{
     super(props);
     this.state = {
       item: this.props.item,
-      labels: this.props.labels
+      labels: this.props.labels,
+      itemsQuantity: this.props.itemsQuantity,
+      
     };
   }
 
@@ -32,11 +35,15 @@ export default class DraggableQuizComponent extends Component{
     if(JSON.stringify(this.state.labels) != JSON.stringify(nextProps.labels)){
       this.setState({labels: nextProps.labels});
     }
+    if(this.state.itemsQuantity != nextProps.itemsQuantity){
+      this.setState({itemsQuantity: nextProps.itemsQuantity});
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState){
     return (JSON.stringify(this.state.item) != JSON.stringify(nextState.item) ||
-           (JSON.stringify(this.state.labels) != JSON.stringify(nextProps.labels)));
+           (JSON.stringify(this.state.labels) != JSON.stringify(nextProps.labels)) ||
+           (this.state.itemsQuantity != nextProps.itemsQuantity));
   }
 
   createActions = () => {
@@ -46,7 +53,7 @@ export default class DraggableQuizComponent extends Component{
         <div className='bottom-actions'>
           <Checkbox label={this.state.labels && this.state.labels["pages.quiz.correct_answer"]} isChecked={item.correct} className={`correct-answer-${item.questionId}`} questionId={item.questionId} answerId={item.id}/>
           <div className='actions-wrapper'>
-            <button className='btn btn-quiz-action remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeAnswer();}}><i className="button-icon glyphicon glyphicon-trash" /> {this.state.labels && this.state.labels["general.remove"]}</button>
+            <button className='btn btn-quiz-action remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeAnswer();}} disabled={this.props.itemsQuantity <= 1 || window.minAnswers > 1}><i className="button-icon glyphicon glyphicon-trash" /> {this.state.labels && this.state.labels["general.remove"]}</button>
           </div>  
         </div>  
       );
@@ -56,7 +63,7 @@ export default class DraggableQuizComponent extends Component{
         <div className='bottom-actions bottom-actions-card'>
           <Checkbox label={this.state.labels && this.state.labels["general.mandatory"]} isChecked={item.required} className='required-question' questionId={item.id}/>
           <div className='actions-wrapper'>
-            <button className='btn btn-quiz-action remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeQuestion();}}><i className="button-icon glyphicon glyphicon-trash" /> {this.state.labels && this.state.labels["general.remove"]}</button>
+            <button className='btn btn-quiz-action remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeQuestion();}} disabled={this.props.itemsQuantity <= 1}><i className="button-icon glyphicon glyphicon-trash" /> {this.state.labels && this.state.labels["general.remove"]}</button>
             <button className='btn btn-quiz-action duplicate-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.duplicateQuestion();}}><i className="button-icon glyphicon glyphicon-duplicate" /> {this.state.labels && this.state.labels["general.duplicate"]}</button>
           </div>  
         </div>
