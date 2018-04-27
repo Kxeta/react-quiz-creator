@@ -13,7 +13,7 @@ class QuizStore {
   set quiz (items) {
     let questionId = '';
     for(let i in items){
-      items[i].order = parseInt(i) + 1;
+    items[i].order = parseInt(i) + 1;
       if(!items[i].id){
         questionId = "new_" + Math.floor(Math.random()*100*Math.random()*5);
         items[i].id = questionId;
@@ -79,6 +79,7 @@ class QuizStore {
   }
 
   set configs (configs) {
+    console.log('Setting configs to:', configs);
     this._configs = JSON.stringify(configs);
   }
 
@@ -128,6 +129,13 @@ class QuizStore {
       }
     }
     let quizJson = quizJsonCopy.filter( question => !question.deleted);
+    console.log(this.quiz, quizJson);
+
+    return quizJson;
+  }
+
+  getStringfiedJSONQuiz() {
+    let quizJson = this.getJSONQuiz();
     let errors = [];
     if(quizJson.length){
       for(let i in quizJson){
@@ -146,33 +154,15 @@ class QuizStore {
       })
     }
     this.errors = errors;
-    console.log(this.quiz, quizJson, errors);
     let responseJSON =  errors.length ? null : quizJson;
+    console.log(this.quiz, quizJson, errors);
     if(responseJSON){
       this.quiz = []
     }
-    return responseJSON;
-  }
-
-  getStringfiedJSONQuiz() {
-    let quizJson = this.getJSONQuiz();
-    return JSON.stringify(quizJson);
+    return JSON.stringify(responseJSON);
   }
   getNotValidatedStringfiedJSONQuiz() {
-    let quizJson = JSON.parse(JSON.stringify(this.quiz));
-    for(let i in quizJson){
-      if(String(quizJson[i].id).indexOf('new_') > -1){
-        quizJson[i].id = null;
-      }
-      if(quizJson[i].answers.length){
-        for(let j in quizJson[i].answers){
-          if(String(quizJson[i].answers[j].id).indexOf('new_') > -1){
-            quizJson[i].answers[j].id = null;
-            quizJson[i].answers[j].questionId = quizJson[i].id;
-          }
-        }
-      }
-    }
+    let quizJson = this.getJSONQuiz();
     return JSON.stringify(quizJson);
   }
 
@@ -194,7 +184,17 @@ class QuizStore {
       }
     }
     let profilesJson = profilesJsonCopy.filter( profile => !profile.deleted);
+    
+    this.configs = {
+      isProfile: true,
+      minAnswers: profilesJson.length ? profilesJson.length : 1
+    }
+    console.log(this.profiles, profilesJson);
+    return profilesJson;
+  }
 
+  getStringfiedJSONProfiles() {
+    let profilesJson = this.getJSONProfiles();
     let errors = [];
     if(!profilesJson.length){
       errors.push({
@@ -202,40 +202,17 @@ class QuizStore {
       })
     }
     this.errors = errors;
-    
-    console.log(this.profiles, profilesJson, errors);
-
-    this.configs = {
-      isProfile: true,
-      minAnswers: profilesJson.length ? profilesJson.length : 1
-    }
-    let responseJSON  = errors.length ? null : profilesJson;
-    if(responseJSON){
+    let responseJSON  = errors.length ? 'error' : profilesJson;
+    if(!errors.length){
       this.profiles = []
     }
+    console.log(this.profiles, profilesJson, errors);
     return responseJSON;
   }
 
-  getStringfiedJSONProfiles() {
-    let profilesJson = this.getJSONProfiles()
-    return JSON.stringify(profilesJson);
-  }
-
   getNotValidatedStringfiedJSONProfiles() {
-    let profilesJson = JSON.parse(JSON.stringify(this.profiles));
-    for(let i in profilesJson){
-      if(String(profilesJson[i].id).indexOf('new_') > -1){
-        profilesJson[i].id = null;
-      }
-      if(profilesJson[i].answers.length){
-        for(let j in profilesJson[i].answers){
-          if(String(profilesJson[i].answers[j].id).indexOf('new_') > -1){
-            profilesJson[i].answers[j].id = null;
-            profilesJson[i].answers[j].questionId = profilesJson[i].id;
-          }
-        }
-      }
-    }
+    let profilesJson = this.getJSONProfiles();
+    console.log(this.profiles, profilesJson, errors);
     return JSON.stringify(profilesJson);
   }
   
