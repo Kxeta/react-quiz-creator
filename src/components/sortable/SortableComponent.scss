@@ -1,10 +1,11 @@
-.rc-editor-wrapper{
+.rc-editor-wrapper {
   width: calc(100% - 25px);
   display: inline-block;
   vertical-align: top;
-  padding: 0 6px 12px;
+  padding: 0 6px 6px;
   &.description-editor{
     width: calc(100% - 9px);
+    padding-left: 22px;
   }
 }
 .drag-handler{
@@ -20,30 +21,15 @@
   }
 }
 
-.draggable-question, .draggable-profiles{
+.draggable-question, .draggable-profiles {
   margin: 0;
-  .checkbox{
-    input[type=checkbox]{
-      width: 16px !important;
-      height: 16px !important;
-      margin-right: 9px;
-      &:checked{
-        &:after{
-          font-size: 9px;
-          position: relative;
-          left: 2px;
-          line-height: 14px;
-        }
-      }
-    }
-  }
 }
 
-.rc-quiz-container{
+.rc-quiz-container {
   position: relative;
   background: white;
-  &.profiles{
-    margin-bottom: 12px;
+  &.profiles {
+    margin-bottom: 24px;
   }
   &.question, &.profiles{
     border: 1px solid #e5e5e5;
@@ -53,7 +39,7 @@
       .rc-quiz-content{
         padding: 24px 36px;
         &[class*='answer']{
-          padding: 24px 0 12px 24px;
+          padding: 24px 0 0 24px;
         }
       }
     }
@@ -73,30 +59,38 @@
   margin: 0;
   list-style-position: inside;
 }
-.answers-list, .profiles-list{
+.answers-list, .profiles-list {
   list-style-type: upper-alpha;
 }
 
-.question-editor{
+.question-editor {
   font-size: 16px !important;
-  p{
+  p {
     font-size: 16px !important;
   }
 }
 
-.answer-editor{
+.answer-editor {
   font-size: 14px !important;
-  p{
+  p {
     font-size: 14px !important;
   }
 }
 
-.bottom-actions{
+.bottom-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  .checkbox{
+  padding: 0 6px 0 46px;
+  .checkbox {
     font-size: 12px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    label {
+      input[type=checkbox] {
+        bottom: 3px;
+      }
+    }
   }
   &.bottom-actions-card {
     background: #f9f9f9;
@@ -105,14 +99,23 @@
     border-bottom-right-radius: 6px;
     padding: 3px 24px;
   }
+  .actions-wrapper {
+    button {
+      span {
+        @media (max-width: 470px) {
+          display: none;
+        }
+      }
+    }
+  }
 }
 
-.btn-quiz-action{
+.btn-quiz-action {
   color: #9ba5af;
   font-size: 12px;
   background: transparent;
   transition: all 300ms ease;
-  &:hover, &:active, &:focus{
+  &:hover, &:active, &:focus {
     color: mix(black, #9ba5af, 40%);
   }
 }
@@ -171,8 +174,8 @@
     top: 8px;
     color: #e84601;
   }
-  &.add-new-answer{    
-    margin: 0 0 20px 40px;
+  &.add-new-answer {    
+    margin: 20px 0 20px 44px;
     width: calc(100% - 50px);
     font-size: 12px;
     padding-left: 0;

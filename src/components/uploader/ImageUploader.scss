@@ -1,5 +1,5 @@
-.imgPreview{
-  width: 240px;
+.imgPreview {
+  width: 147px;
   height: 180px;
   display: flex;
   text-align: center;
@@ -7,60 +7,45 @@
   justify-content: center;
   border: 1px dashed #d3cfcf;
   position: relative;
-  p{
+  overflow: hidden;
+  p {
     font-size: 12px;
     margin: 6px 0 0;
     font-weight: 400;
   }
 
-  &.hasPreview{
-    padding: 24px 24px 48px 24px;
-    img{
+  &:hover {
+    background-color: #f9f9f9;
+  }
+
+  &.hasPreview {
+    padding: 0px 10px 38px 10px;
+    img {
       max-height: 100%;
       max-width: 100%;
       margin: 0 auto;
-    }
-    .img-preview-actions{
-      position: absolute;
-      bottom: 6px;
-      right: 0;
-      left: 0;
-      .btn{
-        background: transparent;
-        padding: 3px 6px;
-        border-radius: 0;
-        font-size: 12px;
-        &:not(:last-of-type){
-          border-right: 1px solid #9b9b9b
-        }
-        &.btn-remove{
-          color: #e74c3c;
-        }
-        &.btn-change{
-          color: #4a90e2;
-        }
-      }
+      border-radius: 100%;
     }
   }
 }
 
-.profile-image-upload-content{
+.profile-image-upload-content {
   display: flex;
   color: #9ba5af;
 }
 
-.profile-image-upload{
+.profile-image-upload {
   margin-right: 24px;
 }
 
-.profile-image-upload-title{
+.profile-image-upload-title {
   margin: 24px 0;
   font-size: 14px;
   color: rgba(#164d5f, 0.9);
 
 }
-.profile-image-upload-description{
-  p{
+.profile-image-upload-description {
+  p {
     margin-bottom: 6px;
     &:last-of-type{
       margin-top: 42px;
@@ -68,10 +53,61 @@
   }
 }
 
-.previewComponent{
-  label{
-    &:hover{
+.previewComponent {
+  form {
+    position: relative;
+  }
+  label {
+    &:hover {
       cursor: pointer;
+    }
+  }
+  .crop-badge {
+    position: absolute;
+    left: calc(50% - 74px);
+    top: 0;
+    canvas {
+      cursor: move;
+    }
+    .img-preview-actions {
+      position: relative;
+      text-align: center;
+      margin-top: 4px;
+    }
+  }
+}
+
+.img-preview-actions {
+  position: absolute;
+  bottom: 6px;
+  right: 0;
+  left: 0;
+  .btn {
+    background: transparent;
+    padding: 3px 6px;
+    border-radius: 0;
+    font-size: 12px;
+    position: relative;
+    &:before {
+      content : "";
+      position: absolute;
+      top: calc(50% - 6px);
+      right: -2px;
+      bottom: 0;
+      height: 12px;
+      width: 1px;
+      border-right: 1px solid #9b9b9b;
+    }
+    &:last-of-type {
+      &:before {
+        content: none;
+      }
+    }
+    &.btn-remove {
+      color: #e74c3c;
+    }
+    &.btn-change, &.btn-save {
+      color: #4a90e2;
     }
   }
 }

@@ -41,18 +41,15 @@ export default class DraggableProfileComponent extends Component{
     let item = this.state.item;
     return (
       <div className='actions-wrapper action-wrapper-profile'>
-        <button className='btn btn-quiz-action remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeProfile();}}><i className="button-icon glyphicon glyphicon-trash" /> {this.state.labels && this.state.labels["general.remove"]}</button>
         <button className='btn btn-quiz-action duplicate-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.duplicateProfile();}}><i className="button-icon glyphicon glyphicon-duplicate" /> {this.state.labels && this.state.labels["general.duplicate"]}</button>
+        <button className='btn btn-quiz-action remove-action' onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.removeProfile();}}><i className="button-icon glyphicon glyphicon-trash" /> {this.state.labels && this.state.labels["general.remove"]}</button>
       </div>  
     );
   }
 
   removeProfile = () => {
     let item = this.state.item;
-    if(item.code){
-      window.removeMedia(item.code);
-    }
-    QuizStore.removeProfile(item.id);
+    QuizStore.removeProfile(item.id, item.code);
   }
 
   duplicateProfile = () => {
@@ -73,11 +70,11 @@ export default class DraggableProfileComponent extends Component{
     profileEl.querySelector('.ql-editor').focus();
   }
 
-  onBadgeChange = (file, base64) => {
-    if(this.state.item.code){
+  onBadgeChange = (file, base64, saved) => {
+    if (this.state.item.code) {
       window.removeMedia(this.state.item.code);
     }
-    QuizStore.updateProfileBadge(this.state.item.id, file, base64);
+    QuizStore.updateProfileBadge(this.state.item.id, file, base64, saved);
   }
 
   render() {
@@ -103,8 +100,8 @@ export default class DraggableProfileComponent extends Component{
               </span>
               <div className='rc-quiz-content-wrapper'>
                 <li className='rc-quiz-content'>
-                  <ProfileEditorComponent placeholder={titlePlaceholder} content={item.name} profileId={item.id} className={customClassName} type='title' id={item.id} ></ProfileEditorComponent>
-                  <ProfileEditorComponent placeholder={descriptionPlaceholder} content={item.description} profileId={item.id} className={customDescriptionClassName} type='description' id={`${item.id}-description`} ></ProfileEditorComponent>
+                  <ProfileEditorComponent charLimit={100} placeholder={titlePlaceholder} content={item.name} profileId={item.id} className={customClassName} type='title' id={item.id} ></ProfileEditorComponent>
+                  <ProfileEditorComponent charLimit={500} placeholder={descriptionPlaceholder} content={item.description} profileId={item.id} className={customDescriptionClassName} type='description' id={`${item.id}-description`} ></ProfileEditorComponent>
                   <div className='profile-image-upload-wrapper'>
                     <p className='profile-image-upload-title'>{this.state.labels && this.state.labels["pages.quiz.insert_image"]}</p>
                     <div className='profile-image-upload-content'>

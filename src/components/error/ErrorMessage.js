@@ -10,18 +10,12 @@ export default class ErrorMessage extends Component {
     show: PropTypes.bool
   };
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       show: false,
       type: this.props.type
     };
-  }
-
-  setMessageType = (type) => {
-    this.setState({
-      type
-    });
   }
 
   setMessageVisible = () => {
@@ -38,15 +32,22 @@ export default class ErrorMessage extends Component {
     );
   }
 
-  componentWillMount(){
-    if(this.props.show){
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.show){
       this.setMessageVisible();
     }
   }
 
-  render(){
-    let classNameMessage = `quiz-message quiz-message-${this.state.type}` 
-    classNameMessage += this.state.show ? ' active' : ''
+  componentWillMount() {
+    if (this.props.show) {
+      this.setMessageVisible();
+    }
+  }
+
+  render() {
+    let classNameMessage = `quiz-message quiz-message-${this.props.type.toLocaleLowerCase()}`;
+    classNameMessage += this.state.show ? ' active' : '';
+
     return (
       <div className={classNameMessage}>
         <div className='quiz-message-content'>

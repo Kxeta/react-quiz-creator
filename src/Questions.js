@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Provider } from 'mobx-react';
 import './styles/main.scss';
-import { DragDropComponent, ImageUploader } from './components';
+import { DragDropComponent } from './components';
 import { QuizStore } from './modules';
 
 
@@ -28,20 +28,19 @@ export default class Questions extends Component {
 
     window.getQuizStateJSON = this.getJSONQuiz;
     window.getQuizStateStringifiedJSON = this.getStringfiedJSONQuiz;
-    // this.updateQuizStateJSON(this.getContentJSON());
+
     this.updateLabels(this.getLabelsJSON());
     this.updateConfigs({ isProfile: false, minAnswers: 1});
    }
 
-  getQuizStateJSON = () =>{
+  getQuizStateJSON = () => {
     return QuizStore.getJSONQuiz();
   }
 
-  getStringfiedJSONQuiz = (validate = true) =>{
-    if(validate){
+  getStringfiedJSONQuiz = (validate = true) => {
+    if (validate) {
       return QuizStore.getStringfiedJSONQuiz();
-    }
-    else{
+    } else {
       return QuizStore.getNotValidatedStringfiedJSONQuiz();
     }
   }
@@ -50,11 +49,11 @@ export default class Questions extends Component {
     QuizStore.quiz = items;
   }
 
-  updateLabels = (labels) => {
+  updateLabels = labels => {
     QuizStore.labels = labels;
   }
 
-  updateConfigs = (configs) => {
+  updateConfigs = configs => {
     QuizStore.configs = configs;
   }
 
@@ -69,6 +68,7 @@ export default class Questions extends Component {
       "pages.quiz.new_profile": "Novo perfil",
       "pages.quiz.new_description_profile": "Descrição do perfil",
       "pages.quiz.correct_answer": "Resposta correta",
+      "pages.quiz.badge_unsaved": "É necessário salvar a imagem do perfil antes de prosseguir",
       "general.mandatory": "Obrigatória",
       "general.remove": "Remover",
       "general.duplicate": "Duplicar",
@@ -82,68 +82,9 @@ export default class Questions extends Component {
       "pages.quiz.no_questions": "Não é possível cadastrar um quiz sem nenhuma pergunta ou com respostas vazias",
       "pages.quiz.no_profiles": "Não é possível cadastrar um quiz de perfil sem nenhum perfil ou com conteúdo vazio",
       "general.we_had_problems": "Encontramos o(s) seguinte(s) problema(s):",
+      "pages.quiz.max_characters": "Máximo de 500 caracteres!"
     }
     return json;
-  }
-  
-  getContentJSON = () => {
-    const json = [
-      { 
-        "id":567,
-        "text":"Pergunta 1",
-        "quizId":107,
-        "answers":[
-          { "id":462,
-            "text":"Resposta 1 - pergunta 1",
-            "correct":true,
-            "order":1,
-            "questionId": 567
-          },
-          { "id":463,
-            "text":"Resposta 2 - pergunta 1",
-            "correct":false,
-            "order":2,
-            "questionId": 567
-          },
-          { "id":464,
-            "text":"Resposta 3 - pergunta 1",
-            "correct":false,
-            "order":3,
-            "questionId": 567
-          }
-        ],
-        "order":1,
-        "required":true
-      },
-      { 
-        "id":221,
-        "text":"Pergunta 2",
-        "quizId":107,
-        "answers":[
-          { "id":231,
-            "text":"Resposta 1 - pergunta 2",
-            "correct":true,
-            "order":1,
-            "questionId": 221
-          },
-          { "id":232,
-            "text":"Resposta 2 - pergunta 2",
-            "correct":false,
-            "order":2,
-            "questionId": 221
-          },
-          { "id":233,
-            "text":"Resposta 3 - pergunta 2",
-            "correct":false,
-            "order":3,
-            "questionId": 221
-          }
-        ],
-        "order":2,
-        "required":false
-      }
-    ];
-  return json;
   }
 
   render () {
@@ -151,7 +92,7 @@ export default class Questions extends Component {
       <Provider QuizStore = { QuizStore }>
         <div>
           <DragDropComponent type='question' items={ QuizStore } droppableId='question-droppable'/>
-          <button className='btn' onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.getJSONQuiz(); } }>Get Json!</button>
+          <button className='btn' onClick={(e) => { e.preventDefault(); e.stopPropagation(); console.log(QuizStore.getJSONQuiz()); } }>Console Json!</button>
         </div>
       </Provider>
     );

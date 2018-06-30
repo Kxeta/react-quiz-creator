@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Provider } from 'mobx-react';
 import './styles/main.scss';
-import { DragDropComponent, ImageUploader } from './components';
+import { DragDropComponent } from './components';
 import { QuizStore } from './modules';
 
 
@@ -14,6 +14,7 @@ export default class Profiles extends Component {
       items: []
     }
     if(window){
+      window.updateQuizStateJSON = this.updateQuizStateJSON;
       window.updateProfilesStateJSON = this.updateProfilesStateJSON;
       window.updateLabels = this.updateLabels;
       window.setConfigs = this.updateConfigs;
@@ -21,19 +22,32 @@ export default class Profiles extends Component {
   }
 
   componentDidMount() {
+    window.updateQuizStateJSON = this.updateQuizStateJSON;
     window.updateProfilesStateJSON = this.updateProfilesStateJSON;
     window.updateLabels = this.updateLabels;
     window.setConfigs = this.updateConfigs;
 
     window.getJSONProfiles = this.getJSONProfiles;
     window.getStringfiedJSONProfiles = this.getStringfiedJSONProfiles;
+    window.getQuizStateStringifiedJSON = this.getStringfiedJSONQuiz;
 
-    // this.updateProfilesStateJSON(this.getContentProfilesJSON());
     this.updateLabels(this.getLabelsJSON());
    }
 
   updateProfilesStateJSON = (items) => {
     QuizStore.profiles = items;
+  }
+
+  updateQuizStateJSON = (items) => {
+    QuizStore.quiz = items;
+  }
+
+  getStringfiedJSONQuiz = (validate = true) => {
+    if (validate) {
+      return QuizStore.getStringfiedJSONQuiz();
+    } else {
+      return QuizStore.getNotValidatedStringfiedJSONQuiz();
+    }
   }
 
   getJSONProfiles = () =>{
@@ -49,11 +63,13 @@ export default class Profiles extends Component {
     }
   }
 
-  updateLabels = (labels) => {
+  updateLabels = labels => {
+    console.log(labels);
     QuizStore.labels = labels;
   }
 
-  updateConfigs = (configs) => {
+  updateConfigs = configs => {
+    console.log(configs);
     QuizStore.configs = configs;
   }
 
@@ -64,10 +80,11 @@ export default class Profiles extends Component {
       "pages.quiz.question": "Pergunta ",
       "pages.quiz.add_new_answer": "Adicionar nova resposta",
       "pages.quiz.new_answer": "Nova resposta",
-      "pages.quiz.add_new_profile": "Adicionar nova perfil",
+      "pages.quiz.add_new_profile": "Adicionar novo perfil",
       "pages.quiz.new_profile": "Novo perfil",
       "pages.quiz.new_description_profile": "Descrição do perfil",
       "pages.quiz.correct_answer": "Resposta correta",
+      "pages.quiz.badge_unsaved": "É necessário salvar a imagem do perfil antes de prosseguir",
       "general.mandatory": "Obrigatória",
       "general.remove": "Remover",
       "general.duplicate": "Duplicar",
@@ -81,51 +98,10 @@ export default class Profiles extends Component {
       "pages.quiz.no_questions": "Não é possível cadastrar um quiz sem nenhuma pergunta ou com respostas vazias",
       "pages.quiz.no_profiles": "Não é possível cadastrar um quiz de perfil sem nenhum perfil ou com conteúdo vazio",
       "general.we_had_problems": "Encontramos o(s) seguinte(s) problema(s):",
+      "pages.quiz.max_characters": "Máximo de 500 caracteres!"
 
     }
     return json;
-  }
-  
-  getContentProfilesJSON = () => {
-    const json = [
-      { 
-        "id":998,
-        "name":"Perfil 1",
-        "order": 1,
-        "quizId":107,
-        "description": "<p>Bacon ipsum dolor amet pancetta dolor ham hock andouille. Biltong incididunt sausage, aliqua ut tongue est sunt elit qui ea pariatur chuck ipsum doner. Ex meatball laborum, filet mignon pastrami qui incididunt. </p> <p>Ball tip picanha sirloin lorem shank elit aliquip ut. Jerky alcatra t-bone, proident ad fatback officia aliqua esse beef voluptate. Eiusmod venison meatball, magna short ribs filet mignon bacon kielbasa chuck incididunt. Biltong proident tri-tip aute est cillum commodo, capicola leberkas.</p>",
-        "badge": {
-          "url": null,
-          "mediaUpload": {
-              "fileName": null,
-              "type": null,
-              "size": null,
-              "data": null
-          }
-        },
-        "pageCode": null,
-        "moduleId": null
-      },
-      { 
-        "id":889,
-        "name":"Perfil 2",
-        "order": 2,
-        "quizId":107,
-        "description": "<p>Bacon ipsum dolor amet pancetta dolor ham hock andouille. Biltong incididunt sausage, aliqua ut tongue est sunt elit qui ea pariatur chuck ipsum doner. Ex meatball laborum, filet mignon pastrami qui incididunt. </p> <p>Ball tip picanha sirloin lorem shank elit aliquip ut. Jerky alcatra t-bone, proident ad fatback officia aliqua esse beef voluptate. Eiusmod venison meatball, magna short ribs filet mignon bacon kielbasa chuck incididunt. Biltong proident tri-tip aute est cillum commodo, capicola leberkas.</p>",
-        "badge": {
-          "url": "https://static.simpsonswiki.com/images/thumb/8/83/Bart_skate_-_s25_artwork.png/200px-Bart_skate_-_s25_artwork.png",
-          "mediaUpload": {
-              "fileName": null,
-              "type": null,
-              "size": null,
-              "data": null
-          }
-        },
-        "pageCode": null,
-        "moduleId": null
-      },
-    ];
-  return json;
   }
 
   render () {
@@ -133,7 +109,6 @@ export default class Profiles extends Component {
         <Provider QuizStore = { QuizStore }>
           <div>
             <DragDropComponent type='profiles' items={ QuizStore } droppableId='profiles-droppable'/>
-            <button className='btn' onClick={(e) => { e.preventDefault(); e.stopPropagation(); QuizStore.getJSONProfiles(); } }>Get Json!</button>
           </div>
       </Provider>
     );

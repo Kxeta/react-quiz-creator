@@ -128,7 +128,7 @@ module.exports = {
   },
   plugins: [
     // bundleAnalyzerPlugin,
-    uglifyPlugin,
+    //uglifyPlugin,
     extractTextPlugin,
     gzip
 

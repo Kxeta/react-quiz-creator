@@ -37,19 +37,17 @@ export default class DragDropComponent extends Component{
       return;
     }
 
-    if(result.type.indexOf('question') >= 0){
+    if (result.type.indexOf('question') >= 0) {
       const destination = result.destination.index;
       const begin = result.source.index;
       let items = [...this.props.QuizStore.quiz];
       items = reorder(items, begin, destination)
       QuizStore.quiz = items;
-    }
-
-    else if(result.type.indexOf('answer') >= 0){
+    } else if (result.type.indexOf('answer') >= 0) {
       let items = this.props.QuizStore.quiz;
       let questionId = result.type.split('-')[1];
       let questionIndex = items.findIndex((item) => {return item.id == questionId});
-      if(questionIndex >= 0){
+      if (questionIndex >= 0) {
         var list = items[questionIndex].answers;
         let answers = reorder(
           list,
@@ -58,39 +56,35 @@ export default class DragDropComponent extends Component{
         );
         items[questionIndex].answers = answers;
         QuizStore.quiz = items;
-      }
-      else{
+      } else {
         return;
       }
-    }
-    else if(result.type.indexOf('profiles') >= 0){
+    } else if (result.type.indexOf('profiles') >= 0) {
       const destination = result.destination.index;
       const begin = result.source.index;
       let items = [...this.props.QuizStore.profiles];
       items = reorder(items, begin, destination)
       QuizStore.profiles = items;
-    }
-    else{
+    } else {
       return;
     }
   }
 
   render() {
     const componentFormat = this.props.type == 'profiles' ? 'profiles' : 'quiz';
-    let items = [];
-    if(componentFormat == 'profiles'){
-      items = this.props.QuizStore.profiles;
-      window.minQuizAnswers = this.props.QuizStore.profiles.length
-    }
-    else{
-      items = this.props.QuizStore.quiz;
+    let { quiz: items, configs, labels, errors, profiles } = this.props.QuizStore;
+
+    if (componentFormat == 'profiles') {
+      items = profiles;
+      window.minQuizAnswers = profiles.length;
     }
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        <DroppableComponent configs={this.props.QuizStore.configs} labels={this.props.QuizStore.labels} errors={this.props.QuizStore.errors} type={ this.props.type } componentFormat={componentFormat} items={items} droppableId={ this.props.droppableId }>
+        <DroppableComponent configs={configs} labels={labels} errors={errors} type={ this.props.type } componentFormat={componentFormat} items={items} droppableId={ this.props.droppableId }>
         </DroppableComponent>
       </DragDropContext>
     );
+    
   }
   
 }

@@ -5574,6 +5574,12 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-avatar-editor@^11.0.2:
+  version "11.0.2"
+  resolved "https://registry.yarnpkg.com/react-avatar-editor/-/react-avatar-editor-11.0.2.tgz#d28fe7a79088676ee71bd0ee5a6d215d06c611dd"
+  dependencies:
+    prop-types "^15.5.8"
+
 react-beautiful-dnd@^6.0.2:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/react-beautiful-dnd/-/react-beautiful-dnd-6.0.2.tgz#2e2deec247cc92727fb290ba08cee4db70b0b439"

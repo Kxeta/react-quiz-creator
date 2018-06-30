@@ -81,13 +81,16 @@ export default class DroppableComponent extends Component{
    errorList.map( error => {
      switch (error.error){
        case 'min_answers_number':
-        html += `<li>${this.state.labels["pages.quiz.question"]} - ${error.questionNr}: ${this.state.labels["pages.quiz.min_answers"] + this.state.configs[minAnswers]}</li>`;
+        html += `<li>${this.state.labels["pages.quiz.question"]} - ${error.questionNr}: ${this.state.labels["pages.quiz.min_answers"]} ${this.state.configs.minAnswers}</li>`;
         break;
       case 'no_questions':
         html += `<li>${this.state.labels["pages.quiz.no_questions"]}</li>`;
         break;
       case 'no_profiles':
         html += `<li>${this.state.labels["pages.quiz.no_profiles"]}</li>`;
+        break;
+      case 'badge_unsaved':
+        html += `<li>${this.state.labels["pages.quiz.badge_unsaved"]}</li>`;
         break;
       default:
         break;
@@ -99,26 +102,29 @@ export default class DroppableComponent extends Component{
 
 
   render() {
-    if(!this.state.items){
+    if (!this.state.items) {
       return null;
     }
+
     let lastItemId = -1;
     let quizId = null;
     let isProfile = this.state.configs.isProfile;
-    if(this.state.items.length){
+
+    if (this.state.items.length) {
       lastItemId = this.state.items[this.state.items.length - 1].id;
       quizId = this.state.items[this.state.items.length - 1].quizId;
     }
+
     let listClassName = "ordered-list";
-    if(this.props.type.indexOf('question') >= 0){
+
+    if (this.props.type.indexOf('question') >= 0) {
       listClassName += " questions-list";
-    }
-    else if(this.props.type.indexOf('answer') >= 0){
+    } else if (this.props.type.indexOf('answer') >= 0) {
       listClassName += " answers-list";
-    }
-    else if(this.props.type.indexOf('profiles') >= 0){
+    } else if (this.props.type.indexOf('profiles') >= 0) {
       listClassName += " profiles-list";
     }
+
     return (
       <Droppable type={ this.props.type } droppableId={ this.props.droppableId } key={ this.props.droppableId }>
         {(provided, snapshot) => (
@@ -126,12 +132,11 @@ export default class DroppableComponent extends Component{
             ref={provided.innerRef}>
             <ol className={listClassName}>
               {this.state.items.map((item, index) => {
-                if(this.props.componentFormat == 'quiz'){
+                if (this.props.componentFormat == 'quiz') {
                   return(
-                    <DraggableQuizComponent configs={this.state.configs} labels={this.state.labels} type={ this.props.type } item={ item } index={ index } itemsQuantity={this.state.items.length} lastItem={ (this.state.items.length-1) == index}></DraggableQuizComponent>
+                    <DraggableQuizComponent index={index} configs={this.state.configs} labels={this.state.labels} type={ this.props.type } item={ item } index={ index } itemsQuantity={this.state.items.length} lastItem={ (this.state.items.length-1) == index}></DraggableQuizComponent>
                   )
-                }
-                else{
+                } else {
                   return(
                     <DraggableProfileComponent labels={this.state.labels} type={ this.props.componentFormat } item={ item } index={ index }></DraggableProfileComponent>
                   )
@@ -165,7 +170,7 @@ export default class DroppableComponent extends Component{
             { this.state.errors && this.state.errors.length && this.state.errors != '[]'  ?
               <ErrorMessage type='error' show={true}>
                 {this.state.labels["general.we_had_problems"]}
-                <ul dangerouslySetInnerHTML={this.  createErrorMessage(this.state.errors)}></ul>
+                <ul dangerouslySetInnerHTML={this.createErrorMessage(this.state.errors)}></ul>
               </ErrorMessage>
               :
               null

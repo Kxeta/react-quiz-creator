@@ -38,22 +38,27 @@ class Checkbox extends Component {
   toggleCheckboxChange = () => {
     const { handleCheckboxChange, label } = this.props;
     let toggled = !this.state.isChecked;
-    if(toggled || !this.props.answerId){
+    if (toggled || !this.props.answerId) {
       this.setState(({ isChecked }) => (
         {
           isChecked: !isChecked,
         }
       ));
-      if(this.props.answerId){
+      if (this.props.answerId) {
         QuizStore.updateCorrectAnswer(toggled, this.props.answerId, this.props.questionId);
-      }
-      else{
+      } else {
         QuizStore.updateRequiredQuestion(toggled, this.props.questionId);
       }
     }
-    
+  }
 
-    // handleCheckboxChange(label);
+  handleKeyPress = event => {
+    event.preventDefault();
+    var keycode = (event.keyCode ? event.keyCode : event.which);
+    if (keycode == 13) {
+      this.toggleCheckboxChange();
+    }   
+    event.stopPropagation();
   }
 
   render() {
@@ -69,6 +74,7 @@ class Checkbox extends Component {
             checked={isChecked}
             onChange={this.toggleCheckboxChange}
             name="checkbox"
+            onKeyPress={this.handleKeyPress}
           />
 
           {label}
